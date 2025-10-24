@@ -129,7 +129,7 @@
 
                         <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;">
                             <label>Kiểm tra cảnh báo hàng tồn : <input type="number" id="lowStockThreshold" value="5" style="width:80px;padding:6px;border-radius:6px;border:1px solid #ccc;margin-left:6px;"></label>
-                            <button type="button" onclick="showLowStock()" class="search-btn"><i class="fas fa-exclamation-triangle"></i> Kiểm tra sắp hết</button>
+                           <!--<button type="button" onclick="showLowStock()" class="search-btn"><i class="fas fa-exclamation-triangle"></i> Kiểm tra sắp hết</button>--> 
                         </div>
                         <div id="lowStockList" style="background:#fff;padding:12px;border-radius:8px;border:1px solid #eee;min-height:40px;">Danh sách hàng sắp hết</div>
 
@@ -137,9 +137,14 @@
                             <label>Tên sản phẩm: <input type="text" id="stockProductName" placeholder="Tên hoặc từ khóa (ví dụ: Honda)" style="padding:6px 8px;border-radius:6px;border:1px solid #ccc;width:220px;margin-left:6px;"></label>
                             <label>Khoảng từ: <input type="text" id="stockFrom" placeholder="dd/mm/yyyy" style="padding:6px 8px;border-radius:6px;border:1px solid #ccc;width:120px;margin-left:6px;"></label>
                             <label>đến: <input type="text" id="stockTo" placeholder="dd/mm/yyyy" style="padding:6px 8px;border-radius:6px;border:1px solid #ccc;width:120px;margin-left:6px;"></label>
-                            <button type="button" onclick="showStockRange()" class="search-btn"> Tra cứu hàng nhập</button>
-                            <button type="button" onclick="showStockRange()" class="search-btn"> Tra cứu hàng xuất</button>
-                            <button type="button" onclick="showStockRange()" class="search-btn"> Tra cứu hàng tồn</button>
+                            <div style="display:flex;gap:12px;align-items:center;">
+                                <div style="display:flex;gap:10px;align-items:center;">
+                                    <label style="display:inline-flex;align-items:center;gap:6px;"> <input type="radio" name="stockRangeType" value="in" id="stockTypeIn" checked> Nhập </label>
+                                    <label style="display:inline-flex;align-items:center;gap:6px;"> <input type="radio" name="stockRangeType" value="out" id="stockTypeOut"> Xuất </label>
+                                    <label style="display:inline-flex;align-items:center;gap:6px;"> <input type="radio" name="stockRangeType" value="stock" id="stockTypeStock"> Tồn </label>
+                                </div>
+                                <button type="button" onclick="showStockRange()" class="search-btn"> Tra cứu </button>
+                            </div>
                         </div>
                         <div id="stockRangeResult" style="background:#fff;padding:12px;border-radius:8px;border:1px solid #eee;min-height:40px;">Kết quả nhập-xuất: </div>
                     </div>
