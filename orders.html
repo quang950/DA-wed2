@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Đơn hàng đã đặt</title>
+  <link rel="stylesheet" href="assets/css/style.css">
+  <style>
+    .orders-container { max-width: 900px; margin: 50px auto; padding: 24px; background: #fff; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+    h2 { text-align:center; margin-bottom:24px; }
+    .order-card { background:#f8f9fa; border-radius:8px; margin-bottom:24px; padding:18px 16px; box-shadow:0 2px 8px rgba(0,0,0,0.04); }
+    .order-header { font-weight:600; margin-bottom:8px; }
+    .order-items th, .order-items td { padding:8px 12px; text-align:center; }
+    .order-items th { background:#007bff; color:#fff; }
+    .order-items { width:100%; border-collapse:collapse; margin-bottom:8px; }
+    .order-total { text-align:right; font-weight:600; font-size:1.1rem; margin-top:8px; }
+  </style>
+</head>
+<body>
+  <div class="orders-container">
+    <h2>Đơn hàng đã đặt</h2>
+    <div style="display:flex;justify-content:center;gap:24px;margin-bottom:32px;">
+      <a href="index.html" style="padding:12px 32px;background:#007bff;color:#fff;border-radius:8px;font-weight:600;text-decoration:none;box-shadow:0 2px 8px rgba(0,123,255,0.08);transition:background 0.2s;">Về trang chủ</a>
+      <a href="cart.html" style="padding:12px 32px;background:#28a745;color:#fff;border-radius:8px;font-weight:600;text-decoration:none;box-shadow:0 2px 8px rgba(40,167,69,0.08);transition:background 0.2s;">Về giỏ hàng</a>
+    </div>
+    <div id="ordersList"></div>
+  </div>
+  <script>
+    function renderOrders() {
+      const orders = JSON.parse(localStorage.getItem('orders')) || [];
+      const ordersList = document.getElementById('ordersList');
+      if (!orders.length) {
+        ordersList.innerHTML = '<div style="text-align:center;color:#e74c3c;font-size:1.3rem;font-weight:600;margin:32px auto;">Bạn chưa có đơn hàng nào.</div>';
+        return;
+      }
+      let html = '';
+      orders.slice().reverse().forEach(order => {
+        html += `<div class='order-card'>`;
+        html += `<div class='order-header'>Mã đơn: ${order.id} | Ngày đặt: ${order.date}</div>`;
+        html += `<div><strong>Người nhận:</strong> ${order.name} | <strong>ĐT:</strong> ${order.phone} | <strong>Địa chỉ:</strong> ${order.address} | <strong>Thanh toán:</strong> ${order.payment === 'cod' ? 'Tiền mặt khi nhận hàng' : (order.payment === 'bank' ? 'Chuyển khoản' : 'Thanh toán trực tuyến')}</div>`;
+        html += `<table class='order-items'><thead><tr><th>Ảnh</th><th>Tên xe</th><th>Giá</th><th>Số lượng</th></tr></thead><tbody>`;
+        order.items.forEach(item => {
+          html += `<tr><td><img src='${item.img}' alt='${item.name}' style='width:70px;border-radius:8px;'></td><td>${item.name}</td><td>${item.price.toLocaleString('vi-VN')} VNĐ</td><td>${item.quantity}</td></tr>`;
+        });
+        html += `</tbody></table>`;
+        html += `<div class='order-total'>Tổng cộng: ${order.total.toLocaleString('vi-VN')} VNĐ</div>`;
+        // Nút hủy đơn hàng
+        if (!order.status || (order.status !== 'cancelled' && order.status !== 'delivered')) {
+          html += `<div style='text-align:right;margin-top:10px;'><button onclick='cancelOrder(${order.id})' style='padding:8px 18px;background:#dc3545;color:#fff;border:none;border-radius:8px;font-weight:600;cursor:pointer;'>Hủy đơn hàng</button></div>`;
+        } else if (order.status === 'cancelled') {
+          html += `<div style='text-align:right;margin-top:10px;'><span style='color:#dc3545;font-weight:600;'>Đơn hàng đã bị hủy</span></div>`;
+        } else if (order.status === 'delivered') {
+          html += `<div style='text-align:right;margin-top:10px;'><span style='color:#28a745;font-weight:600;'>Đơn hàng đã giao</span></div>`;
+        }
+        html += `</div>`;
+      });
+      ordersList.innerHTML = html;
+    }
+    document.addEventListener('DOMContentLoaded', renderOrders);
+    // Hàm hủy đơn hàng
+    function cancelOrder(orderId) {
+      if (!confirm('Bạn có chắc chắn muốn hủy đơn hàng này?')) return;
+      let orders = JSON.parse(localStorage.getItem('orders')) || [];
+      const idx = orders.findIndex(o => o.id === orderId);
+      if (idx !== -1) {
+        orders[idx].status = 'cancelled';
+        localStorage.setItem('orders', JSON.stringify(orders));
+        renderOrders();
+        alert('Đã hủy đơn hàng!');
+      }
+    }
+  </script>
+</body>
+</html>

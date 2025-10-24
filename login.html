@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đăng nhập - 3 Boys Auto</title>
+    <link href="https://fonts.googleapis.com/css2?family=Lobster&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-box">
+            <h1>Đăng nhập</h1>
+            <div class="logo">
+                <i class="fas fa-user-circle"></i>
+            </div>
+            <form action="#" method="POST" class="login-form" id="loginForm" autocomplete="off" data-lpignore="true">
+                <input type="text" style="display:none" autocomplete="new-text">
+                <input type="password" style="display:none" autocomplete="new-password">
+                <div class="form-group">
+                    <label for="email"><i class="fas fa-envelope"></i> Email</label>
+                    <input type="email" id="email" name="email" autocomplete="new-email" value="" data-lpignore="true" required>
+                </div>
+                <div class="form-group">
+                    <label for="password"><i class="fas fa-lock"></i> Mật khẩu</label>
+                    <input type="password" id="password" name="password" autocomplete="new-password" value="" data-lpignore="true" required>
+                </div>
+                <div class="form-options">
+                    <label class="remember-me">
+                        <input type="checkbox" name="remember"> Ghi nhớ đăng nhập
+                    </label>
+                    <a href="#" class="forgot-password">Quên mật khẩu?</a>
+                </div>
+                <button type="submit" class="login-btn">Đăng nhập</button>
+            </form>
+            <div class="register-link">
+                Chưa có tài khoản? <a href="register.html">Đăng ký ngay</a>
+            </div>
+            
+            <div class="divider">
+                <span>hoặc</span>
+            </div>
+            
+            <div class="google-login-container">
+                <button class="google-login-btn" onclick="showGmailLogin()">
+                    <i class="fab fa-google"></i> Đăng nhập bằng Google
+                </button>
+            </div>
+            
+            <!-- Gmail Login Modal -->
+            <div id="gmailModal" class="gmail-modal" style="display: none;">
+                <div class="gmail-modal-content">
+                    <div class="gmail-modal-header">
+                        <h3><i class="fab fa-google"></i> Đăng nhập bằng Google</h3>
+                        <span class="gmail-close" onclick="closeGmailLogin()">&times;</span>
+                    </div>
+                    <div class="gmail-modal-body">
+                        <form id="gmailForm" autocomplete="off">
+                            <div class="form-group">
+                                <label for="gmailEmail">Email hoặc tên người dùng:</label>
+                                <input type="text" id="gmailEmail" autocomplete="new-email" value="" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="gmailPassword">Mật khẩu:</label>
+                                <input type="password" id="gmailPassword" autocomplete="new-password" value="" required>
+                            </div>
+                            <button type="submit" class="gmail-submit-btn">
+                                <i class="fab fa-google"></i> Đăng nhập
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="back-to-site">
+                <a href="index.html"><i class="fas fa-home"></i> Về trang chủ</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Login Box - Góc phải -->
+    <div class="admin-login-box">
+        <div class="admin-toggle" onclick="toggleAdminLogin()">
+            <i class="fas fa-user-shield"></i>
+            <span>Admin</span>
+        </div>
+        <div class="admin-login-form" id="adminLoginForm" style="display: none;">
+            <h3>Đăng nhập Admin</h3>
+            <form id="adminForm" autocomplete="off">
+                <div class="form-group">
+                    <label for="adminUsername">Tài khoản:</label>
+                    <input type="text" id="adminUsername" placeholder="Nhập tài khoản admin" autocomplete="new-username" required>
+                </div>
+                <div class="form-group">
+                    <label for="adminPassword">Mật khẩu:</label>
+                    <input type="password" id="adminPassword" placeholder="Nhập mật khẩu" autocomplete="new-password" required>
+                </div>
+                <button type="submit" class="admin-submit-btn">
+                    <i class="fas fa-sign-in-alt"></i> Đăng nhập
+                </button>
+            </form>
+            <div class="admin-error" id="adminError" style="display: none;"></div>
+        </div>
+    </div>
+
+    <script>
+        // Hiển thị form đăng nhập Gmail
+        function showGmailLogin() {
+            document.getElementById('gmailModal').style.display = 'flex';
+        }
+        
+        // Đóng form đăng nhập Gmail
+        function closeGmailLogin() {
+            document.getElementById('gmailModal').style.display = 'none';
+        }
+        
+        // Xử lý đăng nhập Gmail
+        document.getElementById('gmailForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const email = document.getElementById('gmailEmail').value;
+            const password = document.getElementById('gmailPassword').value;
+            
+            // Cho phép đăng nhập với bất kỳ thông tin nào
+            if (email && password) {
+                const userName = email.includes('@') ? email.split('@')[0] : email; // Lấy phần trước @ hoặc toàn bộ nếu không có @
+                
+                const userInfo = {
+                    id: 'gmail_' + Date.now(),
+                    name: userName,
+                    email: email,
+                    picture: `https://ui-avatars.com/api/?name=${userName}&background=db4437&color=fff&size=50`,
+                    loginTime: new Date().toISOString(),
+                    loginType: 'gmail'
+                };
+                
+                localStorage.setItem('userLoggedIn', 'true');
+                localStorage.setItem('userInfo', JSON.stringify(userInfo));
+                
+                alert(`Đăng nhập thành công: ${email}`);
+                window.location.href = 'index.html';
+            } else {
+                alert('Vui lòng nhập đầy đủ thông tin đăng nhập');
+            }
+        });
+
+        // Xử lý form đăng nhập thông thường
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            
+            // Chỉ cho phép khách hàng đã đăng ký đăng nhập
+            if (email && password) {
+                let users = JSON.parse(localStorage.getItem('users')) || [];
+                const user = users.find(u => u.email === email && u.password === password);
+                if (!user) {
+                    alert('Email hoặc mật khẩu không đúng, hoặc tài khoản chưa đăng ký!');
+                    return;
+                }
+                const userName = user.firstName + ' ' + user.lastName;
+                const userInfo = {
+                    id: 'user_' + Date.now(),
+                    name: userName,
+                    email: user.email,
+                    picture: user.avatar || `https://ui-avatars.com/api/?name=${userName}&background=007bff&color=fff&size=50`,
+                    loginTime: new Date().toISOString(),
+                    loginType: 'normal'
+                };
+                localStorage.setItem('userLoggedIn', 'true');
+                localStorage.setItem('userInfo', JSON.stringify(userInfo));
+                localStorage.setItem('userEmail', user.email);
+                alert(`Đăng nhập thành công: ${userName}`);
+                window.location.href = 'index.html';
+            }
+        });
+
+        // Kiểm tra nếu đã đăng nhập
+        if (localStorage.getItem('userLoggedIn') === 'true') {
+            window.location.href = 'index.html';
+        }
+        
+        // Đảm bảo form luôn trống khi load trang
+        document.addEventListener('DOMContentLoaded', function() {
+            clearAllForms();
+            
+            // Chỉ clear 1 lần sau khi DOM load xong
+            setTimeout(function() {
+                clearAllForms();
+            }, 100);
+            
+            // Clear lần cuối sau 500ms
+            setTimeout(function() {
+                clearAllForms();
+            }, 500);
+        });
+        
+        // Function để clear toàn bộ form
+        function clearAllForms() {
+            // Clear tất cả input fields
+            const emailField = document.getElementById('email');
+            const passwordField = document.getElementById('password');
+            const gmailEmailField = document.getElementById('gmailEmail');
+            const gmailPasswordField = document.getElementById('gmailPassword');
+            
+            if (emailField && (emailField.value === 'wed123123' || emailField.value.includes('wed') || emailField.value === '')) {
+                emailField.value = '';
+                emailField.setAttribute('value', '');
+            }
+            if (passwordField && (passwordField.value.includes('123') || passwordField.value === '')) {
+                passwordField.value = '';
+                passwordField.setAttribute('value', '');
+            }
+            if (gmailEmailField) {
+                gmailEmailField.value = '';
+                gmailEmailField.setAttribute('value', '');
+            }
+            if (gmailPasswordField) {
+                gmailPasswordField.value = '';
+                gmailPasswordField.setAttribute('value', '');
+            }
+        }
+        
+        // Chỉ clear khi focus vào input và có giá trị không mong muốn
+        document.addEventListener('focus', function(e) {
+            if (e.target.type === 'email' || e.target.type === 'password') {
+                if (e.target.value === 'wed123123' || (e.target.value.includes('wed') && e.target.value.length > 0)) {
+                    e.target.value = '';
+                }
+            }
+        }, true);
+        
+        // Đóng modal khi click bên ngoài
+        window.onclick = function(event) {
+            const modal = document.getElementById('gmailModal');
+            if (event.target == modal) {
+                closeGmailLogin();
+            }
+        }
+
+        // Toggle Admin Login Form
+        function toggleAdminLogin() {
+            const adminForm = document.getElementById('adminLoginForm');
+            adminForm.style.display = adminForm.style.display === 'none' ? 'block' : 'none';
+        }
+
+        // Xử lý đăng nhập Admin
+        document.getElementById('adminForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const username = document.getElementById('adminUsername').value;
+            const password = document.getElementById('adminPassword').value;
+            const errorDiv = document.getElementById('adminError');
+            
+            // Cho phép đăng nhập với bất kỳ thông tin nào
+            if (username && password) {
+                const adminInfo = {
+                    id: 'admin_' + Date.now(),
+                    name: username,
+                    username: username,
+                    picture: `https://ui-avatars.com/api/?name=${username}&background=dc3545&color=fff&size=50`,
+                    loginTime: new Date().toISOString(),
+                    loginType: 'admin'
+                };
+                
+                localStorage.setItem('adminLoggedIn', 'true');
+                localStorage.setItem('adminUsername', username);
+                localStorage.setItem('adminInfo', JSON.stringify(adminInfo));
+                
+                alert(`Đăng nhập admin thành công: ${username}`);
+                window.location.href = 'admin-themsanpham.html';
+            } else {
+                errorDiv.textContent = 'Vui lòng nhập đầy đủ thông tin!';
+                errorDiv.style.display = 'block';
+                setTimeout(() => {
+                    errorDiv.style.display = 'none';
+                }, 3000);
+            }
+        });
+    </script>
+</body>
+</html>

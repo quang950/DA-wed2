@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đăng ký - 3 Boys Auto</title>
+    <link href="https://fonts.googleapis.com/css2?family=Lobster&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+    <div class="register-container">
+        <div class="register-box">
+            <h1>Đăng ký tài khoản</h1>
+            <div class="logo">
+                <i class="fas fa-user-plus"></i>
+            </div>
+            <form action="#" method="POST" class="register-form" id="registerForm">
+                <!-- Thông tin cơ bản -->
+                <div class="form-row">
+                    <div class="form-group half">
+                        <label for="firstName"><i class="fas fa-user"></i> Họ</label>
+                        <input type="text" id="firstName" name="firstName" placeholder="Nhập họ" required>
+                    </div>
+                    <div class="form-group half">
+                        <label for="lastName"><i class="fas fa-user"></i> Tên</label>
+                        <input type="text" id="lastName" name="lastName" placeholder="Nhập tên" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="email"><i class="fas fa-envelope"></i> Email</label>
+                    <input type="email" id="email" name="email" placeholder="example@email.com" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="phone"><i class="fas fa-phone"></i> Số điện thoại</label>
+                    <input type="tel" id="phone" name="phone" placeholder="0123456789" pattern="[0-9]{10,11}" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="birthDate"><i class="fas fa-calendar"></i> Ngày sinh</label>
+                    <input type="date" id="birthDate" name="birthDate" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="province"><i class="fas fa-map-marker-alt"></i> Tỉnh/Thành phố</label>
+                    <select id="province" name="province" required>
+                        <option value="">Chọn tỉnh/thành phố</option>
+                        <option value="hanoi">Hà Nội</option>
+                        <option value="hcm">TP. Hồ Chí Minh</option>
+                        <option value="danang">Đà Nẵng</option>
+                        <option value="haiphong">Hải Phòng</option>
+                        <option value="cantho">Cần Thơ</option>
+                        <option value="angiang">An Giang</option>
+                        <option value="bariavungtau">Bà Rịa - Vũng Tàu</option>
+                        <option value="bacgiang">Bắc Giang</option>
+                        <option value="backan">Bắc Kạn</option>
+                        <option value="baclieu">Bạc Liêu</option>
+                        <option value="bacninh">Bắc Ninh</option>
+                        <option value="bentre">Bến Tre</option>
+                        <option value="binhdinh">Bình Định</option>
+                        <option value="binhduong">Bình Dương</option>
+                        <option value="binhphuoc">Bình Phước</option>
+                        <option value="binhthuan">Bình Thuận</option>
+                        <option value="camau">Cà Mau</option>
+                        <option value="caobang">Cao Bằng</option>
+                        <option value="daklak">Đắk Lắk</option>
+                        <option value="daknong">Đắk Nông</option>
+                        <option value="dienbien">Điện Biên</option>
+                        <option value="dongnai">Đồng Nai</option>
+                        <option value="dongthap">Đồng Tháp</option>
+                        <option value="gialai">Gia Lai</option>
+                        <option value="hagiang">Hà Giang</option>
+                        <option value="haiduong">Hải Dương</option>
+                        <option value="hanam">Hà Nam</option>
+                        <option value="hatinh">Hà Tĩnh</option>
+                        <option value="haugiang">Hậu Giang</option>
+                        <option value="hoabinh">Hòa Bình</option>
+                        <option value="hungyen">Hưng Yên</option>
+                        <option value="khanhhoa">Khánh Hòa</option>
+                        <option value="kiengiang">Kiên Giang</option>
+                        <option value="kontum">Kon Tum</option>
+                        <option value="laichau">Lai Châu</option>
+                        <option value="lamdong">Lâm Đồng</option>
+                        <option value="langson">Lạng Sơn</option>
+                        <option value="laocai">Lào Cai</option>
+                        <option value="longan">Long An</option>
+                        <option value="namdinh">Nam Định</option>
+                        <option value="nghean">Nghệ An</option>
+                        <option value="ninhbinh">Ninh Bình</option>
+                        <option value="ninhthuan">Ninh Thuận</option>
+                        <option value="phutho">Phú Thọ</option>
+                        <option value="phuyen">Phú Yên</option>
+                        <option value="quangbinh">Quảng Bình</option>
+                        <option value="quangnam">Quảng Nam</option>
+                        <option value="quangngai">Quảng Ngãi</option>
+                        <option value="quangninh">Quảng Ninh</option>
+                        <option value="quangtri">Quảng Trị</option>
+                        <option value="soctrang">Sóc Trăng</option>
+                        <option value="sonla">Sơn La</option>
+                        <option value="tayninh">Tây Ninh</option>
+                        <option value="thaibinh">Thái Bình</option>
+                        <option value="thainguyen">Thái Nguyên</option>
+                        <option value="thanhhoa">Thanh Hóa</option>
+                        <option value="thuathienhue">Thừa Thiên Huế</option>
+                        <option value="tiengiang">Tiền Giang</option>
+                        <option value="travinh">Trà Vinh</option>
+                        <option value="tuyenquang">Tuyên Quang</option>
+                        <option value="vinhlong">Vĩnh Long</option>
+                        <option value="vinhphuc">Vĩnh Phúc</option>
+                        <option value="yenbai">Yên Bái</option>
+                    </select>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group half">
+                        <label for="password"><i class="fas fa-lock"></i> Mật khẩu</label>
+                        <input type="password" id="password" name="password" placeholder="Tối thiểu 6 ký tự" minlength="6" required>
+                    </div>
+                    <div class="form-group half">
+                        <label for="confirmPassword"><i class="fas fa-lock"></i> Xác nhận mật khẩu</label>
+                        <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Nhập lại mật khẩu" required>
+                    </div>
+                </div>
+
+                <div class="form-group checkbox-group">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="agreeTerms" name="agreeTerms" required>
+                        <span class="checkmark"></span>
+                        Tôi đồng ý với <a href="#" onclick="showTerms()">Điều khoản sử dụng</a> và <a href="#" onclick="showPrivacy()">Chính sách bảo mật</a> của 3 Boys Auto
+                    </label>
+                </div>
+
+                <div class="form-group checkbox-group">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="subscribeNewsletter" name="subscribeNewsletter">
+                        <span class="checkmark"></span>
+                        Tôi muốn nhận thông tin khuyến mãi và tin tức mới nhất từ 3 Boys Auto
+                    </label>
+                </div>
+
+                <button type="submit" class="register-btn">
+                    <i class="fas fa-user-plus"></i> Đăng ký tài khoản
+                </button>
+            </form>
+
+            <div class="login-link">
+                Đã có tài khoản? <a href="login.html">Đăng nhập ngay</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Điều khoản sử dụng -->
+    <div id="termsModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Điều khoản sử dụng</h2>
+                <span class="close" onclick="closeModal('termsModal')">&times;</span>
+            </div>
+            <div class="modal-body">
+                <h3>1. Chấp nhận điều khoản</h3>
+                <p>Bằng việc sử dụng website 3 Boys Auto, bạn đồng ý tuân thủ các điều khoản và điều kiện sử dụng được quy định dưới đây.</p>
+                
+                <h3>2. Sử dụng dịch vụ</h3>
+                <p>Người dùng cam kết sử dụng website một cách hợp pháp, không vi phạm pháp luật Việt Nam và không làm tổn hại đến quyền lợi của các bên khác.</p>
+                
+                <h3>3. Thông tin sản phẩm</h3>
+                <p>3 Boys Auto cam kết cung cấp thông tin sản phẩm chính xác nhất. Tuy nhiên, có thể có sai sót về kỹ thuật và chúng tôi có quyền điều chỉnh khi cần thiết.</p>
+                
+                <h3>4. Thanh toán và giao hàng</h3>
+                <p>Khách hàng có trách nhiệm thanh toán đầy đủ theo thỏa thuận. Thời gian giao xe sẽ được thông báo cụ thể cho từng đơn hàng.</p>
+                
+                <h3>5. Bảo hành</h3>
+                <p>Tất cả xe được bán tại 3 Boys Auto đều được bảo hành theo chính sách của hãng sản xuất.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Chính sách bảo mật -->
+    <div id="privacyModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Chính sách bảo mật</h2>
+                <span class="close" onclick="closeModal('privacyModal')">&times;</span>
+            </div>
+            <div class="modal-body">
+                <h3>1. Thu thập thông tin</h3>
+                <p>Chúng tôi thu thập thông tin cá nhân khi bạn đăng ký tài khoản, đặt hàng hoặc liên hệ với chúng tôi.</p>
+                
+                <h3>2. Sử dụng thông tin</h3>
+                <p>Thông tin của bạn được sử dụng để:</p>
+                <ul>
+                    <li>Xử lý đơn hàng và cung cấp dịch vụ</li>
+                    <li>Liên hệ với bạn về đơn hàng</li>
+                    <li>Gửi thông tin khuyến mãi (nếu bạn đồng ý)</li>
+                    <li>Cải thiện dịch vụ của chúng tôi</li>
+                </ul>
+                
+                <h3>3. Bảo vệ thông tin</h3>
+                <p>Chúng tôi cam kết bảo vệ thông tin cá nhân của bạn bằng các biện pháp bảo mật hiện đại.</p>
+                
+                <h3>4. Chia sẻ thông tin</h3>
+                <p>Chúng tôi không bán, cho thuê hoặc chia sẻ thông tin cá nhân của bạn với bên thứ ba, trừ khi có yêu cầu từ cơ quan pháp luật.</p>
+                
+                <h3>5. Quyền của người dùng</h3>
+                <p>Bạn có quyền yêu cầu truy cập, chỉnh sửa hoặc xóa thông tin cá nhân của mình bất cứ lúc nào.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Xử lý form đăng ký
+        document.getElementById('registerForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            
+            if (password !== confirmPassword) {
+                alert('Mật khẩu xác nhận không khớp!');
+                return;
+            }
+            
+            const agreeTerms = document.getElementById('agreeTerms').checked;
+            if (!agreeTerms) {
+                alert('Bạn phải đồng ý với điều khoản sử dụng!');
+                return;
+            }
+            
+            // Thu thập dữ liệu form
+            const formData = {
+                firstName: document.getElementById('firstName').value,
+                lastName: document.getElementById('lastName').value,
+                email: document.getElementById('email').value,
+                phone: document.getElementById('phone').value,
+                birthDate: document.getElementById('birthDate').value,
+                province: document.getElementById('province').value,
+                password: password,
+                subscribeNewsletter: document.getElementById('subscribeNewsletter').checked
+            };
+            
+            // Lưu vào localStorage (trong thực tế sẽ gửi lên server)
+            let users = JSON.parse(localStorage.getItem('users')) || [];
+            
+            // Kiểm tra email đã tồn tại
+            if (users.find(user => user.email === formData.email)) {
+                alert('Email này đã được đăng ký!');
+                return;
+            }
+            
+            users.push(formData);
+            localStorage.setItem('users', JSON.stringify(users));
+            
+            alert('Đăng ký thành công! Bạn sẽ được chuyển đến trang đăng nhập.');
+            window.location.href = 'login.html';
+        });
+        
+        // Hiển thị modal
+        function showTerms() {
+            document.getElementById('termsModal').style.display = 'block';
+        }
+        
+        function showPrivacy() {
+            document.getElementById('privacyModal').style.display = 'block';
+        }
+        
+        // Đóng modal
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+        
+        // Đóng modal khi click ra ngoài
+        window.onclick = function(event) {
+            if (event.target.classList.contains('modal')) {
+                event.target.style.display = 'none';
+            }
+        }
+        
+        // Validate số điện thoại
+        document.getElementById('phone').addEventListener('input', function(e) {
+            this.value = this.value.replace(/[^0-9]/g, '');
+        });
+    </script>
+</body>
+</html>

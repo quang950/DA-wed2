@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - Quản lý sản phẩm</title>
+    <link rel="stylesheet" href="assets/css/admin-style-new.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="admin-container">
+        <header class="admin-header">
+            <div class="admin-nav">
+                <h1>Admin Panel - 3 Boys Auto</h1>
+                <div class="admin-actions">
+                    <span id="admin-welcome">Xin chào, Admin!</span>
+                    <button onclick="goToHomePage()" class="home-btn">
+                        <i class="fas fa-home"></i> Trang chủ
+                    </button>
+                    <button onclick="logout()" class="logout-btn">
+                        <i class="fas fa-sign-out-alt"></i> Đăng xuất
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <main class="admin-main">
+            <div class="admin-sidebar">
+                <nav class="sidebar-nav">
+                    <ul>
+                        <li class="active">
+                            <a href="#products" onclick="showSection('products')">
+                                <i class="fas fa-car"></i> Quản lý sản phẩm
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#orders" onclick="showSection('orders')">
+                                <i class="fas fa-file-invoice"></i> Quản lý đơn hàng
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#imports" onclick="showSection('imports')">
+                                <i class="fas fa-truck-field"></i> <i class="fas fa-box-open" style="color:#6c757d;font-size:0.95rem;" title="Nhập hàng"></i> Quản lý nhập hàng
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#stock" onclick="showSection('stock')">
+                                <i class="fas fa-boxes"></i> Quản lý tồn kho
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#customers" onclick="showSection('customers')">
+                                <i class="fas fa-users"></i> Quản lý khách hàng
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#dashboard" onclick="showSection('dashboard')">
+                                <i class="fas fa-dashboard"></i> Thống kê
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+
+            <div class="admin-content">
+                <!-- Quản lý đơn hàng -->
+                <section id="orders-section" class="content-section" style="display:none">
+                    <div class="section-header">
+                        <h2>Quản lý đơn hàng</h2>
+                    </div>
+                    <div style="margin-bottom:18px;display:flex;gap:24px;flex-wrap:wrap;align-items:center;">
+                        <label>Ngày đặt: <input type="date" id="orderDateFrom"></label>
+                        <label>đến: <input type="date" id="orderDateTo"></label>
+                        <label>Tình trạng: 
+                            <select id="orderStatusFilter">
+                                <option value="">Tất cả</option>
+                                <option value="new">Mới đặt</option>
+                                <option value="processing">Đã xử lý</option>
+                                <option value="delivered">Đã giao</option>
+                                <option value="cancelled">Hủy</option>
+                            </select>
+                        </label>
+                        <button onclick="filterAdminOrders()" class="search-btn"><i class="fas fa-search"></i> Lọc</button>
+                    </div>
+                    <div id="adminOrdersGrid"></div>
+                </section>
+
+                <!-- Quản lý phiếu nhập hàng -->
+                <section id="imports-section" class="content-section" style="display:none">
+                    <div class="section-header" style="padding:10px 16px;">
+                        <div style="display:flex;flex-direction:column;gap:8px;">
+                            <div style="display:flex;align-items:center;gap:10px;">
+                                <i class="fas fa-truck" style="color:#6c757d;font-size:1.15rem;min-width:20px;text-align:center;"></i>
+                                <span style="font-weight:700;color:#333;font-size:1rem;">Quản lý phiếu nhập hàng</span>
+                            </div>
+                            <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
+                                <input type="text" id="importSearchId" placeholder="Tìm theo mã hoặc sản phẩm" style="padding:8px;border-radius:6px;border:1px solid #ccc;min-width:220px;">
+                                <label style="font-weight:600;color:#0d279d;">Ngày từ: <input type="text" id="importDateFrom" placeholder="dd/mm/yyyy" style="padding:6px 8px;border-radius:6px;border:1px solid #ccc;width:120px;margin-left:6px;"></label>
+                                <label style="font-weight:600;color:#0d279d;">đến: <input type="text" id="importDateTo" placeholder="dd/mm/yyyy" style="padding:6px 8px;border-radius:6px;border:1px solid #ccc;width:120px;margin-left:6px;"></label>
+                                <select id="importStatusFilter" style="padding:8px;border-radius:6px;border:1px solid #ccc;">
+                                    <option value="">Tất cả</option>
+                                    <option value="pending">Chưa hoàn thành</option>
+                                    <option value="completed">Đã hoàn thành</option>
+                                </select>
+                                <button onclick="filterImports()" class="search-btn"><i class="fas fa-search"></i> Lọc</button>
+                                <button onclick="showAddImportModal()" class="add-btn" style="padding:10px 14px;margin-left:8px;"><i class="fas fa-plus"></i> Thêm phiếu nhập</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="importsGrid" style="margin-top:18px;"></div>
+                </section>
+
+                <!-- Quản lý tồn kho -->
+                <section id="stock-section" class="content-section" style="display:none">
+                    <div class="section-header">
+                        <h2>Quản lý tồn kho</h2>
+                    </div>
+
+                    <div style="display:flex;flex-direction:column;gap:12px;">
+                        <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:center;">
+                            <label>Sản phẩm:
+                                <select id="stockProductSelect" style="padding:8px;border-radius:6px;border:1px solid #ccc;min-width:220px;"></select>
+                            </label>
+                            <label>Ngày cần tra cứu: <input type="text" id="stockDate" placeholder="dd/mm/yyyy" style="padding:6px 8px;border-radius:6px;border:1px solid #ccc;width:140px;margin-left:6px;"></label>
+                            <button type="button" onclick="showStockAtDate()" class="search-btn"><i class="fas fa-search"></i> Tra cứu </button>
+                        </div>
+
+                        <div id="stockResult" style="background:#fff;padding:12px;border-radius:8px;border:1px solid #eee;min-height:40px;">Kết quả tìm kiếm: </div>
+
+                        <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;">
+                            <label>Kiểm tra cảnh báo hàng tồn : <input type="number" id="lowStockThreshold" value="5" style="width:80px;padding:6px;border-radius:6px;border:1px solid #ccc;margin-left:6px;"></label>
+                            <button type="button" onclick="showLowStock()" class="search-btn"><i class="fas fa-exclamation-triangle"></i> Kiểm tra sắp hết</button>
+                        </div>
+                        <div id="lowStockList" style="background:#fff;padding:12px;border-radius:8px;border:1px solid #eee;min-height:40px;">Danh sách hàng sắp hết</div>
+
+                        <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-top:8px;">
+                            <label>Tên sản phẩm: <input type="text" id="stockProductName" placeholder="Tên hoặc từ khóa (ví dụ: Honda)" style="padding:6px 8px;border-radius:6px;border:1px solid #ccc;width:220px;margin-left:6px;"></label>
+                            <label>Khoảng từ: <input type="text" id="stockFrom" placeholder="dd/mm/yyyy" style="padding:6px 8px;border-radius:6px;border:1px solid #ccc;width:120px;margin-left:6px;"></label>
+                            <label>đến: <input type="text" id="stockTo" placeholder="dd/mm/yyyy" style="padding:6px 8px;border-radius:6px;border:1px solid #ccc;width:120px;margin-left:6px;"></label>
+                            <button type="button" onclick="showStockRange()" class="search-btn"> Tra cứu hàng nhập</button>
+                            <button type="button" onclick="showStockRange()" class="search-btn"> Tra cứu hàng xuất</button>
+                            <button type="button" onclick="showStockRange()" class="search-btn"> Tra cứu hàng tồn</button>
+                        </div>
+                        <div id="stockRangeResult" style="background:#fff;padding:12px;border-radius:8px;border:1px solid #eee;min-height:40px;">Kết quả nhập-xuất: </div>
+                    </div>
+                </section>
+
+
+                <!-- Quản lý sản phẩm -->
+                <section id="products-section" class="content-section active">
+                    <div class="section-header">
+                        <h2>Quản lý sản phẩm</h2>
+                        <button onclick="showAddProductModal()" class="add-btn">
+                            <i class="fas fa-plus"></i> Thêm sản phẩm mới
+                        </button>
+                    </div>
+                    <div class="products-grid" id="products-grid">
+                        <!-- Danh sách sản phẩm sẽ được hiển thị ở đây -->
+                    </div>
+                </section>
+
+                <!-- Quản lý khách hàng -->
+                <section id="customers-section" class="content-section" style="display:none">
+                    <div class="section-header">
+                        <h2>Quản lý khách hàng</h2>
+                    </div>
+                    <div class="customers-grid" id="customers-grid">
+                        <!-- Danh sách khách hàng sẽ được hiển thị ở đây -->
+                    </div>
+                </section>
+
+                <!-- Thống kê -->
+                <section id="dashboard-section" class="content-section">
+                    <h2>Thống kê</h2>
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <i class="fas fa-car"></i>
+                            <div class="stat-info">
+                                <h3 id="total-products">0</h3>
+                                <p>Tổng sản phẩm</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <i class="fas fa-eye"></i>
+                            <div class="stat-info">
+                                <h3 id="total-views">0</h3>
+                                <p>Lượt xem</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal thêm sản phẩm -->
+    <div id="addProductModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Thêm sản phẩm mới</h3>
+                <span class="close" onclick="closeAddProductModal()">&times;</span>
+            </div>
+            <form id="addProductForm">
+                <div class="form-group">
+                    <label for="productName">Tên sản phẩm:</label>
+                    <input type="text" id="productName" name="productName" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="productBrand">Thương hiệu:</label>
+                    <select id="productBrand" name="productBrand" required>
+                        <option value="">Chọn thương hiệu</option>
+                        <option value="toyota">Toyota</option>
+                        <option value="mercedes">Mercedes</option>
+                        <option value="bmw">BMW</option>
+                        <option value="audi">Audi</option>
+                        <option value="lexus">Lexus</option>
+                        <option value="honda">Honda</option>
+                        <option value="hyundai">Hyundai</option>
+                        <option value="kia">KIA</option>
+                        <option value="vinfast">Vinfast</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="productPrice">Giá (VNĐ):</label>
+                    <input type="number" id="productPrice" name="productPrice" required min="0">
+                </div>
+
+                <div class="form-group">
+                    <label for="productYear">Năm sản xuất:</label>
+                    <input type="number" id="productYear" name="productYear" required min="2000" max="2025">
+                </div>
+
+                <div class="form-group">
+                    <label for="productFuel">Loại nhiên liệu:</label>
+                    <select id="productFuel" name="productFuel" required>
+                        <option value="">Chọn loại nhiên liệu</option>
+                        <option value="Xăng">Xăng</option>
+                        <option value="Dầu">Dầu</option>
+                        <option value="Hybrid">Hybrid</option>
+                        <option value="Điện">Điện</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="productTransmission">Hộp số:</label>
+                    <select id="productTransmission" name="productTransmission" required>
+                        <option value="">Chọn hộp số</option>
+                        <option value="Số tự động">Số tự động</option>
+                        <option value="Số sàn">Số sàn</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="productCategory">Loại sản phẩm:</label>
+                    <select id="productCategory" name="productCategory">
+                        <option value="">Chọn loại</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="productImage">Hình ảnh:</label>
+                    <input type="file" id="productImage" name="productImage" accept="image/*" onchange="previewImage(this)">
+                    <div id="imagePreview" style="margin-top: 10px; display: none;">
+                        <img id="previewImg" src="" alt="Preview" style="max-width: 200px; max-height: 150px; border-radius: 8px; border: 1px solid #ddd;">
+                    </div>
+                    <small>Hoặc nhập URL hình ảnh:</small>
+                    <input type="url" id="productImageUrl" name="productImageUrl" placeholder="https://example.com/image.jpg" onchange="previewUrlImage(this)">
+                </div>
+
+                <div class="form-group">
+                    <label for="productDescription">Mô tả:</label>
+                    <textarea id="productDescription" name="productDescription" rows="4"></textarea>
+                </div>
+
+                <div class="modal-actions">
+                    <button type="button" onclick="closeAddProductModal()" class="cancel-btn">Hủy</button>
+                    <button type="submit" class="save-btn">Lưu sản phẩm</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+        <!-- Modal thêm / sửa phiếu nhập -->
+        <div id="addImportModal" class="modal" style="display:none;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>Thêm phiếu nhập</h3>
+                    <span class="close" onclick="closeAddImportModal()">&times;</span>
+                </div>
+                <form id="addImportForm">
+                    <div style="display:flex;gap:16px;align-items:center;flex-wrap:wrap;padding:12px 0;">
+                        <label>Ngày nhập: <input type="date" id="importDate" name="importDate" required></label>
+                        <label>Mã phiếu (Auto): <input type="text" id="importCode" name="importCode" disabled placeholder="(tự động)"></label>
+                    </div>
+
+                    <div id="importItemsContainer">
+                        <div class="import-item-row" style="display:flex;gap:8px;align-items:center;margin-bottom:8px;">
+                            <select class="import-product-select" style="flex:2;padding:8px;border-radius:6px;border:1px solid #ccc;">
+                                <option value="">-- Chọn sản phẩm --</option>
+                            </select>
+                            <input type="number" class="import-price" placeholder="Giá nhập" min="0" style="flex:1;padding:8px;border-radius:6px;border:1px solid #ccc;">
+                            <input type="number" class="import-qty" placeholder="Số lượng" min="1" value="1" style="width:100px;padding:8px;border-radius:6px;border:1px solid #ccc;">
+                            <button type="button" class="remove-item-btn" onclick="removeImportItemRow(this)" style="padding:8px 10px;border-radius:6px;background:#dc3545;color:#fff;border:none;">Xóa</button>
+                        </div>
+                    </div>
+
+                    <div style="margin-top:8px;margin-bottom:12px;">
+                        <button type="button" onclick="addImportItemRow()" class="add-btn" style="padding:8px 12px;border-radius:6px;"><i class="fas fa-plus"></i> Thêm dòng</button>
+                    </div>
+
+                    <div class="modal-actions">
+                        <button type="button" onclick="closeAddImportModal()" class="cancel-btn">Hủy</button>
+                        <button type="submit" class="save-btn">Lưu phiếu nhập</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <script src="assets/js/admin.js"></script>
+    <script>
+        // Function để quay về trang chủ
+        function goToHomePage() {
+            // Lưu trạng thái admin đang đăng nhập khi về trang chủ
+            localStorage.setItem('adminViewingHome', 'true');
+            window.location.href = 'index.html';
+        }
+
+        // Kiểm tra đăng nhập khi load trang
+        document.addEventListener('DOMContentLoaded', function() {
+            if (!localStorage.getItem('adminLoggedIn')) {
+                window.location.href = 'admin-login.html';
+                return;
+            }
+            
+            const username = localStorage.getItem('adminUsername');
+            if (username) {
+                document.getElementById('admin-welcome').textContent = `Xin chào, ${username}!`;
+            }
+            
+            // Khởi tạo loại sản phẩm và cập nhật select
+            if (typeof initCategories === 'function') initCategories();
+            if (typeof updateCategorySelect === 'function') updateCategorySelect();
+
+            // Tự động nhập các xe có sẵn từ trang chủ (nếu đã được cache)
+            if (typeof importHomepageCars === 'function') {
+                try { importHomepageCars(true); } catch (e) { /* ignore */ }
+            }
+
+            loadProducts();
+            updateStats();
+        });
+    </script>
+</body>
+</html>

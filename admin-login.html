@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login - AutoCar</title>
+        <title>Đăng nhập Admin</title>
+    <link rel="stylesheet" href="assets/css/admin-style-new.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="admin-login-container">
+        <div class="login-box">
+            <h2>Đăng nhập Admin</h2>
+            <form id="adminLoginForm" autocomplete="off" data-lpignore="true">
+                <input type="text" style="display:none" autocomplete="new-text">
+                <input type="password" style="display:none" autocomplete="new-password">
+                <div class="form-group">
+                    <label for="username">Tài khoản</label>
+                    <input type="text" id="username" name="username" placeholder="Nhập tài khoản admin" autocomplete="new-username" value="" data-lpignore="true" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Mật khẩu</label>
+                    <input type="password" id="password" name="password" placeholder="Nhập mật khẩu" autocomplete="new-password" value="" data-lpignore="true" required>
+                </div>
+                <button type="submit" class="login-btn">Đăng nhập</button>
+            </form>
+            <div id="error-message" class="error-message" style="display: none;"></div>
+            <div class="back-to-home">
+                <a href="index.html" class="home-link">
+                    <i class="fas fa-home"></i> Về Trang Chủ
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Đảm bảo form luôn trống khi load trang
+        document.addEventListener('DOMContentLoaded', function() {
+            clearAdminForm();
+            
+            // Chỉ clear 1 lần sau khi DOM load xong
+            setTimeout(function() {
+                clearAdminForm();
+            }, 100);
+            
+            // Clear lần cuối sau 500ms
+            setTimeout(function() {
+                clearAdminForm();
+            }, 500);
+        });
+        
+        // Function để clear toàn bộ form
+        function clearAdminForm() {
+            const usernameField = document.getElementById('username');
+            const passwordField = document.getElementById('password');
+            
+            if (usernameField && (usernameField.value === 'wed123123' || usernameField.value.includes('wed') || usernameField.value === '')) {
+                usernameField.value = '';
+                usernameField.setAttribute('value', '');
+            }
+            if (passwordField && (passwordField.value.includes('123') || passwordField.value === '')) {
+                passwordField.value = '';
+                passwordField.setAttribute('value', '');
+            }
+        }
+        
+        // Chỉ clear khi focus vào input và có giá trị không mong muốn
+        document.addEventListener('focus', function(e) {
+            if (e.target.type === 'text' || e.target.type === 'password') {
+                if (e.target.value === 'wed123123' || (e.target.value.includes('wed') && e.target.value.length > 0) || 
+                    (e.target.value.includes('123') && e.target.value.length > 0)) {
+                    e.target.value = '';
+                }
+            }
+        }, true);
+
+        document.getElementById('adminLoginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const errorMessage = document.getElementById('error-message');
+            
+            // Cho phép đăng nhập với bất kỳ thông tin nào
+            if (username && password) {
+                // Lưu trạng thái đăng nhập admin
+                const adminInfo = {
+                    id: 'admin_' + Date.now(),
+                    name: username,
+                    username: username,
+                    picture: `https://ui-avatars.com/api/?name=${username}&background=dc3545&color=fff&size=50`,
+                    loginTime: new Date().toISOString(),
+                    loginType: 'admin'
+                };
+                
+                localStorage.setItem('adminLoggedIn', 'true');
+                localStorage.setItem('adminUsername', username);
+                localStorage.setItem('adminInfo', JSON.stringify(adminInfo));
+                
+                alert(`Đăng nhập admin thành công: ${username}`);
+                // Chuyển hướng đến trang admin
+                window.location.href = 'admin-themsanpham.html';
+            } else {
+                // Hiển thị thông báo lỗi
+                errorMessage.textContent = 'Vui lòng nhập đầy đủ thông tin đăng nhập!';
+                errorMessage.style.display = 'block';
+                
+                // Ẩn thông báo lỗi sau 3 giây
+                setTimeout(() => {
+                    errorMessage.style.display = 'none';
+                }, 3000);
+            }
+        });
+    </script>
+</body>
+</html>

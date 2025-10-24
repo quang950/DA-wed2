@@ -1,0 +1,1514 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3 Boys Auto  - Những chiếc xe mơ ước</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Lobster&display=swap" rel="stylesheet">
+
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <div class="logo">
+                <a href="index.html">3 Boys Auto</a>
+            </div>
+            <div class="nav-links">
+                <a href="index.html" class="active">Trang chủ</a>
+                <div class="dropdown">
+                    <a href="#" class="dropdown-trigger">Loại xe <i class="fas fa-chevron-down"></i></a>
+                    <div class="dropdown-content">
+                        <a href="#toyota">Toyota</a>
+                        <a href="#mercedes">Mercedes</a>
+                        <a href="#bmw">BMW</a>
+                        <a href="#audi">Audi</a>
+                        <a href="#lexus">Lexus</a>
+                        <a href="#honda">Honda</a>
+                        <a href="#hyundai">Hyundai</a>
+                        <a href="#kia">KIA</a>
+                        <a href="#vinfast">Vinfast</a>
+                    </div>
+                </div>
+                <button id="filterToggleBtn">Tìm kiếm <i class="fas fa-search"></i></button>
+                <div id="searchBarWrapper" style="display:none;position:absolute;left:0;top:100%;width:100%;z-index:999;">
+                    <div class="product-search-bar" style="max-width:700px;margin:0 auto;padding:18px 24px;background:#fff;border-radius:10px;box-shadow:0 2px 8px rgba(0,0,0,0.08);display:flex;flex-wrap:wrap;gap:1rem;align-items:center;">
+                        <input type="text" id="searchName" placeholder="Tên xe..." style="flex:2 1 180px;padding:8px 12px;border-radius:6px;border:1px solid #ccc;">
+                        <select id="searchBrand" style="flex:1 1 120px;padding:8px 12px;border-radius:6px;border:1px solid #ccc;">
+                            <option value="">Phân loại</option>
+                            <option value="toyota">Toyota</option>
+                            <option value="mercedes">Mercedes</option>
+                            <option value="bmw">BMW</option>
+                            <option value="audi">Audi</option>
+                            <option value="lexus">Lexus</option>
+                            <option value="honda">Honda</option>
+                            <option value="hyundai">Hyundai</option>
+                            <option value="kia">KIA</option>
+                            <option value="vinfast">Vinfast</option>
+                        </select>
+                        <input type="number" id="searchPriceFrom" placeholder="Giá từ" min="0" style="flex:1 1 90px;padding:8px 12px;border-radius:6px;border:1px solid #ccc;">
+                        <input type="number" id="searchPriceTo" placeholder="Giá đến" min="0" style="flex:1 1 90px;padding:8px 12px;border-radius:6px;border:1px solid #ccc;">
+                        <button id="searchBtn" style="flex:0 1 120px;padding:10px 24px;background:#007bff;color:#fff;border:none;border-radius:6px;font-weight:600;cursor:pointer;">Tìm kiếm</button>
+                    </div>
+                </div>
+        <script>
+        // Hiện/ẩn bảng tìm kiếm ngay dưới nút khi bấm
+        document.addEventListener('DOMContentLoaded', function() {
+            var filterBtn = document.getElementById('filterToggleBtn');
+            var searchBarWrapper = document.getElementById('searchBarWrapper');
+            if (filterBtn && searchBarWrapper) {
+                filterBtn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    if (searchBarWrapper.style.display === 'none') {
+                        searchBarWrapper.style.display = 'block';
+                        searchBarWrapper.style.animation = 'slideDown 0.35s';
+                    } else {
+                        searchBarWrapper.style.display = 'none';
+                    }
+                });
+                // Ẩn khi click ra ngoài
+                document.addEventListener('click', function(e) {
+                    if (!searchBarWrapper.contains(e.target) && e.target !== filterBtn) {
+                        searchBarWrapper.style.display = 'none';
+                    }
+                });
+            }
+        });
+        </script>
+                <a href="#about">Giới thiệu</a>
+                <a href="#contact">Liên hệ</a>
+            </div>
+            <div class="user-actions">
+                <a href="#" onclick="checkLoginAndGoToCart()" class="cart-icon">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span class="cart-text">Xem giỏ hàng</span>
+                    <span class="cart-count">0</span>
+                </a>
+                <div class="login-options" id="loginOptions">
+                    <a href="login.html" class="blob-btn login-btn" id="loginBtn">
+                        <span class="blob-btn__inner">
+                            <span class="blob-btn__blobs">
+                                <span class="blob-btn__blob"></span>
+                                <span class="blob-btn__blob"></span>
+                                <span class="blob-btn__blob"></span>
+                                <span class="blob-btn__blob"></span>
+                            </span>
+                        </span>
+                        Đăng nhập
+                    </a>
+                </div>
+                <div class="user-info" id="userInfo" style="display: none;">
+                    <img src="" alt="Avatar" class="user-avatar" id="userAvatar" style="cursor:pointer" onclick="window.location.href='guest.html'">
+                    <span class="user-name" id="userName" style="cursor:pointer" onclick="window.location.href='guest.html'"></span>
+                    <a href="#" class="logout-link" onclick="logout()">Đăng xuất</a>
+                </div>
+
+                <!-- Modal thông tin cá nhân -->
+                <div id="personalInfoModal" class="modal" style="display:none;">
+                    <div class="modal-content" style="max-width: 420px;">
+                        <div class="modal-header">
+                            <h2><i class="fas fa-user"></i> Thông tin cá nhân</h2>
+                            <span class="close" onclick="closePersonalInfoModal()">&times;</span>
+                        </div>
+                        <form id="personalInfoForm" style="padding: 20px 24px;">
+                            <div class="form-group">
+                                <label for="personalFirstName">Họ</label>
+                                <input type="text" id="personalFirstName" name="firstName" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="personalLastName">Tên</label>
+                                <input type="text" id="personalLastName" name="lastName" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="personalEmail">Email</label>
+                                <input type="email" id="personalEmail" name="email" required disabled>
+                            </div>
+                            <div class="form-group">
+                                <label for="personalPhone">Điện thoại</label>
+                                <input type="text" id="personalPhone" name="phone">
+                            </div>
+                            <div class="form-group">
+                                <label for="personalBirthDate">Ngày sinh</label>
+                                <input type="date" id="personalBirthDate" name="birthDate">
+                            </div>
+                            <div class="form-group">
+                                <label for="personalProvince">Tỉnh/TP</label>
+                                <input type="text" id="personalProvince" name="province">
+                            </div>
+                            <div class="modal-actions">
+                                <button type="button" class="cancel-btn" onclick="closePersonalInfoModal()">Hủy</button>
+                                <button type="submit" class="save-btn">Lưu</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero">
+            <div class="hero-bg-static" style="background-image: url('assets/images/images-index/hero-bg.jpg');"></div>
+            <div class="hero-content">
+                <h1>3 Boys Auto</h1>
+                <p>Chiếc xe mơ ước của bạn ở đây</p>
+            </div>
+        </section>
+
+        <section id="products" class="brands-section">
+            <div class="section-title">
+                <h2>Các dòng xe nổi bật</h2>
+            </div>
+            <!-- Toyota Section -->
+            <div id="toyota" class="brand-container">
+                <div class="brand-header">
+                    <div class="brand-title">
+                        <img src="assets/images/logo-toyota.png" alt="Toyota Logo" class="brand-logo">
+                        <h2>TOYOTA</h2>
+                    </div>
+                    <a href="#" class="view-more">Xem thêm <i class="fas fa-arrow-right"></i></a>
+                </div>
+                <div class="car-slider">
+                    <div class="car-container">
+                        <div class="car-card" data-origin="Nhật Bản" data-year="2025" data-fuel="Xăng" data-seats="5" data-transmission="Tự động (AT)" data-engine="2.5L" data-desc="Sedan hạng D êm ái, tiện nghi, tiết kiệm.">
+                            <img src="assets/images/toyota-camry.jpg" alt="Toyota Camry">
+                            <h3>Toyota Camry</h3>
+                            <p class="price">1.235.000.000 VNĐ</p>
+                            <div class="button-container">
+                                    <button onclick="addToCart('Toyota Camry', 1235000000, 'assets/images/toyota-camry.jpg')" class="buy-btn">Mua hàng</button>
+
+                                    <a href="#" class="view-details">Chi tiết</a>
+
+
+                            </div>
+                        </div>
+                        <div class="car-card" data-origin="Nhật Bản" data-year="2025" data-fuel="Xăng" data-seats="5" data-transmission="Tự động (CVT)" data-engine="1.5L" data-desc="Sedan đô thị bền bỉ, tiết kiệm nhiên liệu.">
+                            <img src="assets/images/toyota-vios.jpg" alt="Toyota Vios">
+                            <h3>Toyota Vios</h3>
+                            <p class="price">592.000.000 VNĐ</p>
+                            <div class="button-container">
+                                    <button onclick="addToCart('Toyota Vios G', 592000000)" class="buy-btn">Mua hàng</button>
+
+                                    <a href="#" class="view-details">Chi tiết</a>
+
+
+                            </div>
+                        </div>
+                        <div class="car-card" data-origin="Nhật Bản" data-year="2025" data-fuel="Dầu" data-seats="7" data-transmission="Tự động (AT)" data-engine="2.8L Diesel" data-desc="SUV 7 chỗ gầm cao, mạnh mẽ và đa dụng.">
+                            <img src="assets/images/toyota-fortuner.jpg" alt="Toyota Fortuner">
+                            <h3>Toyota Fortuner</h3>
+                            <p class="price">1.350.000.000 VNĐ</p>
+                            <div class="button-container">
+                                    <button onclick="addToCart('Toyota Fortuner', 1350000000)" class="buy-btn">Mua hàng</button>
+
+                                    <a href="#" class="view-details">Chi tiết</a>
+
+
+                            </div>
+                        </div>
+                        <div class="car-card" data-origin="Nhật Bản" data-year="2025" data-fuel="Xăng" data-seats="5" data-transmission="Tự động (CVT)" data-engine="1.8L" data-desc="Crossover đô thị, vận hành mượt và tiết kiệm.">
+                            <img src="assets/images/toyota-cross.jpg" alt="Toyota Cross">
+                            <h3>Toyota Cross</h3>
+                            <p class="price">820.000.000 VNĐ</p>
+                            <div class="button-container">
+                                    <button onclick="addToCart('Toyota Cross', 820000000)" class="buy-btn">Mua hàng</button>
+
+                                    <a href="#" class="view-details">Chi tiết</a>
+
+
+                            </div>
+                        </div>
+                        <div class="car-card" data-origin="Nhật Bản" data-year="2025" data-fuel="Xăng" data-seats="7" data-transmission="Tự động (AT)" data-engine="2.0L" data-desc="MPV 7 chỗ rộng rãi, phù hợp gia đình.">
+                            <img src="assets/images/toyota-innova.jpg" alt="Toyota Innova">
+                            <h3>Toyota Innova</h3>
+                            <p class="price">755.000.000 VNĐ</p>
+                            <div class="button-container">
+                                    <button onclick="addToCart('Toyota Innova', 755000000)" class="buy-btn">Mua hàng</button>
+
+                                    <a href="#" class="view-details">Chi tiết</a>
+
+
+                            </div>
+                        </div>
+                        <div class="car-card" data-origin="Nhật Bản" data-year="2025" data-fuel="Xăng" data-seats="5" data-transmission="Tự động (CVT)" data-engine="1.5L" data-desc="Hatchback linh hoạt, dễ lái, tiết kiệm.">
+                            <img src="assets/images/toyota-yaris.jpg" alt="Toyota Yaris">
+                            <h3>Toyota Yaris</h3>
+                            <p class="price">684.000.000 VNĐ</p>
+                            <div class="button-container">
+                                    <button onclick="addToCart('Toyota Yaris', 684000000)" class="buy-btn">Mua hàng</button>
+
+                                    <a href="#" class="view-details">Chi tiết</a>
+
+
+                            </div>
+                        </div>
+                        <div class="car-card" data-origin="Nhật Bản" data-year="2025" data-fuel="Xăng" data-seats="5" data-transmission="Tự động (CVT)" data-engine="1.8L" data-desc="Sedan hạng C cân bằng giữa hiệu suất và tiết kiệm.">
+                            <img src="assets/images/toyota-corolla.jpg" alt="Toyota Corolla">
+                            <h3>Toyota Corolla</h3>
+                            <p class="price">800.000.000 VNĐ</p>
+                            <div class="button-container">
+                                    <button onclick="addToCart('Toyota Corolla', 800000000)" class="buy-btn">Mua hàng</button>
+
+                                    <a href="#" class="view-details">Chi tiết</a>
+
+
+                            </div>
+                        </div>
+                        <div class="car-card" data-origin="Nhật Bản" data-year="2025" data-fuel="Xăng" data-seats="5" data-transmission="Tự động (CVT)" data-engine="1.0L Turbo" data-desc="SUV cỡ nhỏ cơ động, tiết kiệm nhiên liệu.">
+                            <img src="assets/images/toyota-raize.jpg" alt="Toyota Raize">
+                            <h3>Toyota Raize</h3>
+                            <p class="price">510.000.000 VNĐ</p>
+                            <div class="button-container">
+                                    <button onclick="addToCart('Toyota Raize', 510000000)" class="buy-btn">Mua hàng</button>
+
+                                    <a href="#" class="view-details">Chi tiết</a>
+
+
+                            </div>
+                        </div>
+                        <div class="car-card" data-origin="Nhật Bản" data-year="2025" data-fuel="Hybrid" data-seats="7" data-transmission="e-CVT" data-engine="2.5L Hybrid" data-desc="MPV hạng sang, tiện nghi cao cấp, vận hành êm ái.">
+                            <img src="assets/images/toyota-alphard.jpg" alt="Toyota Alphard">
+                            <h3>Toyota Alphard</h3>
+                            <p class="price">4.370.000.000 VNĐ</p>
+                            <div class="button-container">
+                                    <button onclick="addToCart('Toyota Alphard', 4370000000)" class="buy-btn">Mua hàng</button>
+
+                                    <a href="#" class="view-details">Chi tiết</a>
+
+
+                            </div>
+                        </div>
+                        <div class="car-card" data-origin="Nhật Bản" data-year="2025" data-fuel="Dầu" data-seats="5" data-transmission="Tự động (AT)" data-engine="2.4L Diesel" data-desc="Bán tải mạnh mẽ, bền bỉ, chở hàng tốt.">
+                            <img src="assets/images/toyota-hilux.jpg" alt="Toyota Hilux">
+                            <h3>Toyota Hilux</h3>
+                            <p class="price">706.000.000 VNĐ</p>
+                            <div class="button-container">
+                                    <button onclick="addToCart('Toyota Hilux', 706000000)" class="buy-btn">Mua hàng</button>
+
+                                    <a href="#" class="view-details">Chi tiết</a>
+
+
+                            </div>
+                        </div>
+                    </div>
+                    <button class="slider-arrow next"><i class="fas fa-chevron-right"></i></button>
+                </div>
+            </div>
+
+            <!-- Mercedes Section -->
+            <div id="mercedes" class="brand-container">
+                <div class="brand-header">
+                    <div class="brand-title">
+                        <img src="assets/images/logo-mercedes.png" alt="Mercedes Logo" class="brand-logo">
+                        <h2>MERCEDES</h2>
+                    </div>
+                    <a href="#" class="view-more">Xem thêm <i class="fas fa-arrow-right"></i></a>
+                </div>
+                <div class="car-slider">
+                    <div class="car-container">
+                        <div class="car-card" data-origin="Đức" data-year="2025" data-fuel="Xăng" data-seats="5" data-transmission="Tự động (AT)" data-engine="1.5L Turbo" data-desc="Sedan hạng C sang trọng, vận hành linh hoạt và tiết kiệm.">
+                            <img src="assets/images/mercedes-c200.jpg" alt="Mercedes C200">
+                            <h3>Mercedes C200</h3>
+                            <p class="price">1.669.000.000 VNĐ</p>
+                            <div class="button-container">
+                                    <button onclick="addToCart('Mercedes C200', 1669000000)" class="buy-btn">Mua hàng</button>
+
+                                    <a href="#" class="view-details">Chi tiết</a>
+
+
+                            </div>
+                        </div>
+                        <div class="car-card" data-origin="Đức" data-year="2025" data-fuel="Xăng" data-seats="5" data-transmission="Tự động (AT)" data-engine="2.0L Turbo" data-desc="Sedan hạng E êm ái, nhiều công nghệ an toàn và tiện nghi.">
+                            <img src="assets/images/mercedes-e200.jpg" alt="Mercedes E200">
+                            <h3>Mercedes E200</h3>
+                            <p class="price">2.310.000.000 VNĐ</p>
+                            <div class="button-container">
+                                    <button onclick="addToCart('Mercedes E200', 2310000000)" class="buy-btn">Mua hàng</button>
+
+                                    <a href="#" class="view-details">Chi tiết</a>
+
+
+                            </div>
+                        </div>
+                        <div class="car-card" data-origin="Đức" data-year="2025" data-fuel="Xăng" data-seats="5" data-transmission="Tự động (AT)" data-engine="2.0L Turbo" data-desc="SUV 5 chỗ cao cấp, vận hành ổn định và tiết kiệm.">
+                            <img src="assets/images/mercedes-glc200.jpg" alt="Mercedes GLC200">
+                            <h3>Mercedes GLC200</h3>
+                            <p class="price">1.859.000.000 VNĐ</p>
+                            <div class="button-container">
+                                    <button onclick="addToCart('Mercedes GLC200', 1859000000)" class="buy-btn">Mua hàng</button>
+
+                                    <a href="#" class="view-details">Chi tiết</a>
+
+
+                            </div>
+                        </div>
+                        <div class="car-card" data-origin="Đức" data-year="2025" data-fuel="Xăng" data-seats="5" data-transmission="Tự động (AT)" data-engine="2.0L Turbo" data-desc="SUV hạng sang, thiết kế thể thao và tiện nghi hiện đại.">
+                            <img src="assets/images/mercedes-glc300.jpg" alt="Mercedes GLC300">
+                            <h3>Maybach GLC300</h3>
+                            <p class="price">2.639.000.000 VNĐ</p>
+                            <div class="button-container">
+                                    <button onclick="addToCart('Mercedes Maybach GLC 300', 2639000000)" class="buy-btn">Mua hàng</button>
+
+                                    <a href="#" class="view-details">Chi tiết</a>
+
+
+                            </div>
+                        </div>
+                        <div class="car-card" data-origin="Đức" data-year="2025" data-fuel="Xăng" data-seats="5" data-transmission="Tự động (AT)" data-engine="3.0L I6" data-desc="SUV hạng sang mạnh mẽ, không gian rộng và êm ái.">
+                            <img src="assets/images/mercedes-gle450.jpg" alt="Mercedes GLE450">
+                            <h3>Maybach GLE450</h3>
+                            <p class="price">4.409.000.000 VNĐ</p>
+                            <div class="button-container">
+                                    <button onclick="addToCart('Mercedes Maybach GLE450', 4409000000)" class="buy-btn">Mua hàng</button>
+
+                                    <a href="#" class="view-details">Chi tiết</a>
+
+
+                            </div>
+                        </div>
+                        <div class="car-card" data-origin="Đức" data-year="2025" data-fuel="Xăng" data-seats="7" data-transmission="Tự động (AT)" data-engine="4.0L V8" data-desc="SUV 7 chỗ siêu sang, tiện nghi đỉnh cao và êm ái.">
+                            <img src="assets/images/mercedes-maybach-GLS600.jpg" alt="Mercedes Maybach GLS600">
+                            <h3>Maybach GLS600</h3>
+                            <p class="price">12.119.000.000 VNĐ</p>
+                            <div class="button-container">
+                                    <button onclick="addToCart('Mercedes Maybach GLS600', 12119000000)" class="buy-btn">Mua hàng</button>
+
+                                    <a href="#" class="view-details">Chi tiết</a>
+
+
+                            </div>
+                        </div>
+                        <div class="car-card" data-origin="Đức" data-year="2025" data-fuel="Xăng" data-seats="5" data-transmission="Tự động (AT)" data-engine="3.0L V6" data-desc="Sedan siêu sang, tiện nghi đẳng cấp và cách âm tuyệt vời.">
+                            <img src="assets/images/mercedes-maybach-S450.jpg" alt="Mercedes Maybach S450">
+                            <h3>Maybach S450</h3>
+                            <p class="price">4.969.000.000 VNĐ</p>
+                            <div class="button-container">
+                                    <button onclick="addToCart('Mercedes Maybach S450', 4969000000)" class="buy-btn">Mua hàng</button>
+
+                                    <a href="#" class="view-details">Chi tiết</a>
+
+
+                            </div>
+                        </div>
+                        <div class="car-card" data-origin="Đức" data-year="2025" data-fuel="Xăng" data-seats="5" data-transmission="Tự động (AT)" data-engine="3.0L I6" data-desc="Sedan siêu sang với công nghệ tối tân và nội thất xa xỉ.">
+                            <img src="assets/images/mercedes-maybach-S480.jpg" alt="Mercedes Maybach S480">
+                            <h3>Maybach S480</h3>
+                            <p class="price">8.799.000.000 VNĐ</p>
+                            <div class="button-container">
+                                    <button onclick="addToCart('Mercedes Maybach S480', 8799000000)" class="buy-btn">Mua hàng</button>
+
+                                    <a href="#" class="view-details">Chi tiết</a>
+
+
+                            </div>
+                        </div>
+                        <div class="car-card" data-origin="Đức" data-year="2025" data-fuel="Xăng" data-seats="5" data-transmission="Tự động (AT)" data-engine="6.0L V12" data-desc="Đỉnh cao sang trọng, vận hành êm ái và quyền lực.">
+                            <img src="assets/images/mercedes-maybach-S650.jpg" alt="Mercedes Maybach S650">
+                            <h3>Maybach S650</h3>
+                            <p class="price">14.899.000.000 VNĐ</p>
+                            <div class="button-container">
+                                    <button onclick="addToCart('Mercedes Maybach S650', 14899000000)" class="buy-btn">Mua hàng</button>
+
+                                    <a href="#" class="view-details">Chi tiết</a>
+
+
+                            </div>
+                        </div>
+                        <div class="car-card" data-origin="Đức" data-year="2025" data-fuel="Xăng" data-seats="5" data-transmission="Tự động (AT)" data-engine="6.0L V12" data-desc="Sedan siêu sang đầu bảng, đẳng cấp thượng lưu.">
+                            <img src="assets/images/mercedes-maybach-S680.jpg" alt="Mercedes Maybach S680">
+                            <h3>Maybach S680</h3>
+                            <p class="price">16.890.000.000 VNĐ</p>
+                            <div class="button-container">
+                                    <button onclick="addToCart('Mercedes Maybach S680', 16890000000)" class="buy-btn">Mua hàng</button>
+
+                                    <a href="#" class="view-details">Chi tiết</a>
+
+
+                            </div>
+                        </div>
+                    </div>
+                    <button class="slider-arrow next"><i class="fas fa-chevron-right"></i></button>
+                </div>
+            </div>
+
+            <!-- BMW Section -->
+            <div id="bmw" class="brand-container">
+                <div class="brand-header">
+                    <div class="brand-title">
+                        <img src="assets/images/logo-bmw.png" alt="BMW Logo" class="brand-logo">
+                        <h2>BMW</h2>
+                    </div>
+                    <a href="#" class="view-more">Xem thêm <i class="fas fa-arrow-right"></i></a>
+                </div>
+                <div class="car-slider">
+                    <div class="car-container">
+                        <div class="car-card" data-origin="Đức" data-year="2025" data-fuel="Xăng" data-seats="5" data-transmission="Tự động (AT)" data-engine="2.0L Turbo" data-desc="Sedan thể thao cân bằng giữa thoải mái và hiệu suất.">
+                            <img src="assets/images/bmw-320i.jpg" alt="BMW 320i">
+                            <h3>BMW 320i</h3>
+                            <p class="price">1.399.000.000 VNĐ</p>
+                            <div class="button-container">
+
+                                <button onclick="addToCart('BMW 320i', 1390000000)" class="buy-btn">Mua hàng</button>
+
+                                <a href="#" class="view-details">Chi tiết</a>
+
+                            </div>
+                        </div>
+                        <div class="car-card" data-origin="Đức" data-year="2025" data-fuel="Xăng" data-seats="5" data-transmission="Tự động (AT)" data-engine="2.0L Turbo" data-desc="Sedan thể thao mạnh mẽ hơn, cảm giác lái hứng khởi.">
+                            <img src="assets/images/bmw-330i.jpg" alt="BMW 330i">
+                            <h3>BMW 330i</h3>
+                            <p class="price">1.719.000.000 VNĐ</p>
+                            <div class="button-container">
+                                    <button onclick="addToCart('BMW 330i', 1719000000)" class="buy-btn">Mua hàng</button>
+
+                                    <a href="#" class="view-details">Chi tiết</a>
+
+
+                            </div>
+                        </div>
+                        <div class="car-card" data-origin="Đức" data-year="2025" data-fuel="Xăng" data-seats="4" data-transmission="Tự động (AT)" data-engine="2.0L Turbo" data-desc="Coupe 4 chỗ, thiết kế thể thao và hiện đại.">
+                            <img src="assets/images/bmw-430i.jpg" alt="BMW 430i">
+                            <h3>BMW 430i</h3>
+                            <p class="price">3.399.000.000 VNĐ</p>
+                            <div class="button-container">
+
+                                <button onclick="addToCart('BMW 430i', 3399000000)" class="buy-btn">Mua hàng</button>
+
+                                <a href="#" class="view-details">Chi tiết</a>
+
+                            </div>
+                        </div>
+                        <div class="car-card" data-origin="Đức" data-year="2025" data-fuel="Xăng" data-seats="5" data-transmission="Tự động (AT)" data-engine="2.0L Turbo" data-desc="Sedan hạng E sang trọng, êm ái và an toàn.">
+                            <img src="assets/images/bmw-520i.jpg" alt="BMW 520i">
+                            <h3>BMW 520i</h3>
+                            <p class="price">1.979.000.000 VNĐ</p>
+                            <div class="button-container">
+
+                                <button onclick="addToCart('BMW 520i', 1979000000)" class="buy-btn">Mua hàng</button>
+
+                                <a href="#" class="view-details">Chi tiết</a>
+
+                            </div>
+                        </div>
+                        <div class="car-card" data-origin="Đức" data-year="2025" data-fuel="Xăng" data-seats="5" data-transmission="Tự động (AT)" data-engine="2.0L Turbo" data-desc="Sedan hạng E hiệu suất cao, nhiều công nghệ hiện đại.">
+                            <img src="assets/images/bmw-530i.jpg" alt="BMW 530i">
+                            <h3>BMW 530i</h3>
+                            <p class="price">2.499.000.000 VNĐ</p>
+                            <div class="button-container">
+
+                                <button onclick="addToCart('BMW 530i', 2499000000)" class="buy-btn">Mua hàng</button>
+
+                                <a href="#" class="view-details">Chi tiết</a>
+
+                            </div>
+                        </div>
+                        <div class="car-card" data-origin="Đức" data-year="2025" data-fuel="Xăng" data-seats="5" data-transmission="Tự động (AT)" data-engine="3.0L I6" data-desc="Sedan hạng sang cỡ lớn, êm ái và tiện nghi cao cấp.">
+                            <img src="assets/images/bmw-730li.jpg" alt="BMW 730Li">
+                            <h3>BMW 730Li</h3>
+                            <p class="price">4.369.000.000 VNĐ</p>
+                            <div class="button-container">
+
+                                <button onclick="addToCart('BMW 730Li', 4369000000)" class="buy-btn">Mua hàng</button>
+
+                                <a href="#" class="view-details">Chi tiết</a>
+
+                            </div>
+                        </div>
+                        <div class="car-card" data-origin="Đức" data-year="2025" data-fuel="Xăng" data-seats="5" data-transmission="Tự động (AT)" data-engine="3.0L I6" data-desc="SUV hạng sang rộng rãi, mạnh mẽ và an toàn.">
+                            <img src="assets/images/bmw-x5.jpg" alt="BMW X5">
+                            <h3>BMW X5</h3>
+                            <p class="price">4.479.000.000 VNĐ</p>
+                            <div class="button-container">
+
+                                <button onclick="addToCart('BMW X5', 4479000000)" class="buy-btn">Mua hàng</button>
+
+                                <a href="#" class="view-details">Chi tiết</a>
+
+                            </div>
+                        </div>
+                        <div class="car-card" data-origin="Đức" data-year="2025" data-fuel="Xăng" data-seats="7" data-transmission="Tự động (AT)" data-engine="3.0L I6" data-desc="SUV full-size 7 chỗ đẳng cấp, nội thất xa xỉ.">
+                            <img src="assets/images/bmw-x7.jpg" alt="BMW X7">
+                            <h3>BMW X7</h3>
+                            <p class="price">6.889.000.000 VNĐ</p>
+                            <div class="button-container">
+
+                                <button onclick="addToCart('BMW X7', 6889000000)" class="buy-btn">Mua hàng</button>
+
+                                <a href="#" class="view-details">Chi tiết</a>
+
+                            </div>
+                        </div>
+                        <div class="car-card" data-origin="Đức" data-year="2025" data-fuel="Xăng" data-seats="2" data-transmission="Tự động (AT)" data-engine="2.0L Turbo" data-desc="Roadster 2 chỗ mui trần, phong cách và cảm xúc.">
+                            <img src="assets/images/bmw-z4.jpg" alt="BMW Z4">
+                            <h3>BMW Z4</h3>
+                            <p class="price">4.239.000.000 VNĐ</p>
+                            <div class="button-container">
+
+                                <button onclick="addToCart('BMW Z4', 4239000000)" class="buy-btn">Mua hàng</button>
+
+                                <a href="#" class="view-details">Chi tiết</a>
+
+                            </div>
+                        </div>
+                        <div class="car-card" data-origin="Đức" data-year="2025" data-fuel="Xăng" data-seats="4" data-transmission="Tự động (AT)" data-engine="4.4L V8" data-desc="Siêu phẩm hiệu suất cao, tăng tốc ấn tượng và sang trọng.">
+                            <img src="assets/images/bmw-m8.jpg" alt="BMW M8">
+                            <h3>BMW M8</h3>
+                            <p class="price">3.660.000.000 VNĐ</p>
+                            <div class="button-container">
+
+                                <button onclick="addToCart('BMW M8', 3660000000)" class="buy-btn">Mua hàng</button>
+
+                                <a href="#" class="view-details">Chi tiết</a>
+
+                            </div>
+                        </div>
+                    </div>
+                    <button class="slider-arrow next"><i class="fas fa-chevron-right"></i></button>
+                </div>
+            </div>
+
+            <!-- AUDI Section -->
+            <div id="audi" class="brand-container">
+                <div class="brand-header">
+                    <div class="brand-title">
+                        <img src="assets/images/logo-audi.png" alt="Audi Logo" class="brand-logo">
+                        <h2>AUDI</h2>
+                    </div>
+                    <a href="#" class="view-more">Xem thêm <i class="fas fa-arrow-right"></i></a>
+                </div>
+                <div class="car-slider">
+                    <div class="car-container">
+                        <div class="car-card" data-origin="Đức" data-year="2025" data-fuel="Xăng" data-seats="5" data-transmission="Tự động (AT)" data-engine="2.0L Turbo" data-desc="Sedan hạng C sang trọng, cách âm tốt và êm ái.">
+                            <img src="assets/images/audi-a4.jpg" alt="Audi A4">
+                            <h3>Audi A4</h3>
+                            <p class="price">1.046.000.000 VNĐ</p>
+                            <div class="button-container">
+
+                                <button onclick="addToCart('Audi A4', 1046000000)" class="buy-btn">Mua hàng</button>
+
+                                <a href="#" class="view-details">Chi tiết</a>
+
+                            </div>
+                        </div>
+                        <div class="car-card" data-origin="Đức" data-year="2025" data-fuel="Xăng" data-seats="5" data-transmission="Tự động (AT)" data-engine="2.0L Turbo" data-desc="Sedan hạng E tinh tế, nhiều công nghệ mới.">
+                            <img src="assets/images/audi-a6.jpg" alt="Audi A6">
+                            <h3>Audi A6</h3>
+                            <p class="price">1.510.000.000 VNĐ</p>
+                            <div class="button-container">
+
+                                <button onclick="addToCart('Audi A6', 1510000000)" class="buy-btn">Mua hàng</button>
+
+                                <a href="#" class="view-details">Chi tiết</a>
+
+                            </div>
+                        </div>
+                        <div class="car-card" data-origin="Đức" data-year="2025" data-fuel="Xăng" data-seats="5" data-transmission="Tự động (AT)" data-engine="3.0L V6" data-desc="Sedan hạng sang cỡ lớn, tiện nghi đỉnh cao.">
+                            <img src="assets/images/audi-a8.jpg" alt="Audi A8">
+                            <h3>Audi A8</h3>
+                            <p class="price">5.299.000.000 VNĐ</p>
+                            <div class="button-container">
+
+                                <button onclick="addToCart('Audi A8', 5299000000)" class="buy-btn">Mua hàng</button>
+
+                                <a href="#" class="view-details">Chi tiết</a>
+
+                            </div>
+                        </div>
+                        <div class="car-card" data-origin="Đức" data-year="2025" data-fuel="Xăng" data-seats="5" data-transmission="Tự động (AT)" data-engine="2.0L Turbo" data-desc="SUV cỡ nhỏ cao cấp, đa dụng trong đô thị.">
+                            <img src="assets/images/audi-q3.jpg" alt="Audi Q3" class="audi-q3-img">
+                            <h3>Audi Q3</h3>
+                            <p class="price">1.089.000.000 VNĐ</p>
+                            <div class="button-container">
+
+                                <button onclick="addToCart('Audi Q3', 1089000000)" class="buy-btn">Mua hàng</button>
+
+                                <a href="#" class="view-details">Chi tiết</a>
+
+                            </div>
+                        </div>
+                        <div class="car-card" data-origin="Đức" data-year="2025" data-fuel="Xăng" data-seats="5" data-transmission="Tự động (AT)" data-engine="2.0L Turbo" data-desc="SUV hạng sang 5 chỗ, vận hành êm ái và an toàn.">
+                            <img src="assets/images/audi-q5.jpg" alt="Audi Q5">
+                            <h3>Audi Q5</h3>
+                            <p class="price">2.039.000.000 VNĐ</p>
+                            <div class="button-container">
+
+                                <button onclick="addToCart('Audi Q5', 2039000000)" class="buy-btn">Mua hàng</button>
+
+                                <a href="#" class="view-details">Chi tiết</a>
+
+                            </div>
+                        </div>
+                        <div class="car-card" data-origin="Đức" data-year="2025" data-fuel="Xăng" data-seats="7" data-transmission="Tự động (AT)" data-engine="3.0L V6" data-desc="SUV 7 chỗ sang trọng, rộng rãi và mạnh mẽ.">
+                            <img src="assets/images/audi-q7.jpg" alt="Audi Q7">
+                            <h3>Audi Q7</h3>
+                            <p class="price">3.300.000.000 VNĐ</p>
+                            <div class="button-container">
+
+                                <button onclick="addToCart('Audi Q7', 3300000000)" class="buy-btn">Mua hàng</button>
+
+                                <a href="#" class="view-details">Chi tiết</a>
+
+                            </div>
+                        </div>
+                        <div class="car-card" data-origin="Đức" data-year="2025" data-fuel="Xăng" data-seats="4" data-transmission="Tự động (AT)" data-engine="4.0L V8" data-desc="Dòng RS hiệu suất cao, thiết kế thể thao cực kỳ ấn tượng.">
+                            <img src="assets/images/audi-rs.jpg" alt="Audi RS">
+                            <h3>Audi RS</h3>
+                            <p class="price">4.750.000.000 VNĐ</p>
+                            <div class="button-container">
+
+                                <button onclick="addToCart('Audi RS', 4750000000)" class="buy-btn">Mua hàng</button>
+
+                                <a href="#" class="view-details">Chi tiết</a>
+
+                            </div>
+                        </div> 
+                        <div class="car-card" data-origin="Đức" data-year="2025" data-fuel="Xăng" data-seats="4" data-transmission="Tự động (AT)" data-engine="4.0L V8" data-desc="Sportback hiệu suất cao, sang trọng và cá tính.">
+                            <img src="assets/images/audi-rs7.jpg" alt="Audi RS7">
+                            <h3>Audi RS7</h3>
+                            <p class="price">2.300.000.000 VNĐ</p>
+                            <div class="button-container">
+
+                                <button onclick="addToCart('Audi RS7', 2300000000)" class="buy-btn">Mua hàng</button>
+
+                                <a href="#" class="view-details">Chi tiết</a>
+
+                            </div>
+                        </div>   
+                        <div class="car-card" data-origin="Đức" data-year="2025" data-fuel="Xăng" data-seats="4" data-transmission="Tự động (AT)" data-engine="3.0L V6" data-desc="Coupe thể thao tinh tế, khả năng vận hành ấn tượng.">
+                            <img src="assets/images/audi-s5.jpg" alt="Audi S5">
+                            <h3>Audi S5</h3>
+                            <p class="price">2.670.000.000 VNĐ</p>
+                            <div class="button-container">
+
+                                <button onclick="addToCart('Audi S5', 2670000000)" class="buy-btn">Mua hàng</button>
+
+                                <a href="#" class="view-details">Chi tiết</a>
+
+                            </div>
+                        </div>
+                        <div class="car-card" data-origin="Đức" data-year="2025" data-fuel="Xăng" data-seats="5" data-transmission="Tự động (AT)" data-engine="4.0L V8" data-desc="Sedan hiệu suất cao đầu bảng, sang trọng và mạnh mẽ.">
+                            <img src="assets/images/audi-s8.jpg" alt="Audi S8">
+                            <h3>Audi S8</h3>
+                            <p class="price">3.100.000.000 VNĐ</p>
+                            <div class="button-container">
+
+                                <button onclick="addToCart('Audi S8', 3100000000)" class="buy-btn">Mua hàng</button>
+
+                                <a href="#" class="view-details">Chi tiết</a>
+
+                            </div>
+                        </div>
+                    </div>
+                    <button class="slider-arrow next"><i class="fas fa-chevron-right"></i></button>
+                </div>
+            </div>
+
+            <!-- LEXUS Section -->
+            <div id="lexus" class="brand-container">
+                <div class="brand-header">
+                    <div class="brand-title">
+                        <img src="assets/images/logo-lexus.png" alt="Lexus Logo" class="brand-logo">
+                        <h2>LEXUS</h2>
+                    </div>
+                    <a href="#" class="view-more">Xem thêm <i class="fas fa-arrow-right"></i></a>
+                </div>
+                <div class="car-slider">
+                    <div class="car-container">
+                        <div class="car-card" data-origin="Nhật Bản" data-year="2025" data-fuel="Xăng" data-seats="5" data-transmission="Tự động (AT)" data-engine="2.5L" data-desc="Sedan hạng sang êm ái, hướng đến sự thoải mái.">
+                            <img src="assets/images/lexus-es250.jpg" alt="Lexus ES250">
+                            <h3>Lexus ES250</h3>
+                            <p class="price">2.360.000.000 VNĐ</p>
+                            <div class="button-container">
+
+                                <button onclick="addToCart('Lexus ES250', 2360000000)" class="buy-btn">Mua hàng</button>
+
+                                <a href="#" class="view-details">Chi tiết</a>
+
+                            </div>
+                        </div>
+                        <div class="car-card" data-origin="Nhật Bản" data-year="2025" data-fuel="Xăng" data-seats="5" data-transmission="Tự động (AT)" data-engine="3.5L V6" data-desc="SUV hạng sang bền bỉ, tiện nghi cao cấp và êm ái.">
+                            <img src="assets/images/lexus-rx350.jpg" alt="Lexus RX350">
+                            <h3>Lexus RX350</h3>
+                            <p class="price">3.430.000.000 VNĐ</p>
+                            <div class="button-container">
+
+                                <button onclick="addToCart('Lexus RX350',3430000000)" class="buy-btn">Mua hàng</button>
+
+                                <a href="#" class="view-details">Chi tiết</a>
+
+                            </div>
+                        </div>
+                        <div class="car-card" data-origin="Nhật Bản" data-year="2025" data-fuel="Hybrid" data-seats="5" data-transmission="e-CVT" data-engine="2.5L Hybrid" data-desc="SUV hybrid tiết kiệm, vận hành mượt mà và êm ái.">
+                            <img src="assets/images/lexus-nx350h.jpg" alt="Lexus NX350h">
+                            <h3>Lexus NX350h</h3>
+                            <p class="price">3.420.000.000 VNĐ</p>
+                            <div class="button-container">
+
+                                <button onclick="addToCart('Lexus NX350h', 3420000000)" class="buy-btn">Mua hàng</button>
+
+                                <a href="#" class="view-details">Chi tiết</a>
+
+                            </div>
+                        </div>
+                        <div class="car-card" data-origin="Nhật Bản" data-year="2025" data-fuel="Hybrid" data-seats="5" data-transmission="e-CVT" data-engine="2.4L Turbo Hybrid" data-desc="SUV hybrid hiệu suất cao, công nghệ hiện đại.">
+                            <img src="assets/images/lexus-rx500h.jpg" alt="Lexus RX500h">
+                            <h3>Lexus RX500h</h3>
+                            <p class="price">4.940.000.000 VNĐ</p>
+                            <div class="button-container">
+
+                                <button onclick="addToCart('Lexus RX500h', 4940000000)" class="buy-btn">Mua hàng</button>
+
+                                <a href="#" class="view-details">Chi tiết</a>
+
+                            </div>
+                        </div>
+                        <div class="car-card" data-origin="Nhật Bản" data-year="2025" data-fuel="Xăng" data-seats="7" data-transmission="Tự động (AT)" data-engine="3.4L V6 Turbo" data-desc="SUV địa hình hạng sang, khỏe khoắn và bền bỉ.">
+                            <img src="assets/images/lexus-gx550m.jpg" alt="Lexus GX550M">
+                            <h3>Lexus GX550M</h3>
+                            <p class="price">6.200.000.000 VNĐ</p>
+                            <div class="button-container">
+
+                                <button onclick="addToCart('Lexus GX550M', 6200000000)" class="buy-btn">Mua hàng</button>
+
+                                <a href="#" class="view-details">Chi tiết</a>
+
+                            </div>
+                        </div>
+                        <div class="car-card" data-origin="Nhật Bản" data-year="2025" data-fuel="Xăng" data-seats="5" data-transmission="Tự động (AT)" data-engine="3.5L V6" data-desc="Sedan flagship sang trọng, cách âm tuyệt vời.">
+                            <img src="assets/images/lexus-ls500.jpg" alt="Lexus LS500">
+                            <h3>Lexus LS500</h3>
+                            <p class="price">7.650.000.000 VNĐ</p>
+                            <div class="button-container">
+
+                                <button onclick="addToCart('Lexus LS500', 7650000000)" class="buy-btn">Mua hàng</button>
+
+                                <a href="#" class="view-details">Chi tiết</a>
+
+                            </div>
+                        </div>
+                        <div class="car-card" data-origin="Nhật Bản" data-year="2025" data-fuel="Xăng" data-seats="7" data-transmission="Tự động (AT)" data-engine="3.5L V6" data-desc="SUV full-size hạng sang, mạnh mẽ và bền bỉ.">
+                            <img src="assets/images/lexus-lx600.jpg" alt="Lexus LX600">
+                            <h3>Lexus LX600</h3>
+                            <p class="price">9.000.000.000 VNĐ</p>
+                            <div class="button-container">
+
+                                <button onclick="addToCart('Lexus LX600', 9000000000)" class="buy-btn">Mua hàng</button>
+
+                                <a href="#" class="view-details">Chi tiết</a>
+
+                            </div>
+                        </div>
+                        <div class="car-card" data-origin="Nhật Bản" data-year="2025" data-fuel="Xăng" data-seats="2" data-transmission="Tự động (AT)" data-engine="5.0L V8" data-desc="Coupe GT sang trọng, âm thanh động cơ đầy cảm xúc.">
+                            <img src="assets/images/lexus-lc500.jpg" alt="Lexus LC500">
+                            <h3>Lexus LC500</h3>
+                            <p class="price">2.500.000.000 VNĐ</p>
+                            <div class="button-container">
+
+                                <button onclick="addToCart('Lexus LC500', 2500000000)" class="buy-btn">Mua hàng</button>
+
+                                <a href="#" class="view-details">Chi tiết</a>
+
+                            </div>
+                        </div>
+                        <div class="car-card" data-origin="Nhật Bản" data-year="2025" data-fuel="Hybrid" data-seats="7" data-transmission="e-CVT" data-engine="2.4L Turbo Hybrid" data-desc="MPV siêu sang, không gian đỉnh cao và cực kỳ êm ái.">
+                            <img src="assets/images/lexus-lm500h.jpg" alt="Lexus LM500h">
+                            <h3>Lexus LM500h</h3>
+                            <p class="price">8.710.000.000 VNĐ</p>
+                            <div class="button-container">
+
+                                <button onclick="addToCart('Lexus LM500h', 8710000000)" class="buy-btn">Mua hàng</button>
+
+                                <a href="#" class="view-details">Chi tiết</a>
+
+                            </div>
+                        </div>
+                        <div class="car-card" data-origin="Nhật Bản" data-year="2025" data-fuel="Hybrid" data-seats="5" data-transmission="e-CVT" data-engine="2.0L Hybrid" data-desc="Crossover hạng sang nhỏ gọn, tiết kiệm và linh hoạt.">
+                            <img src="assets/images/lexus-ux.jpg" alt="Lexus UX">
+                            <h3>Lexus UX</h3>
+                            <p class="price">2.600.000.000 VNĐ</p>
+                            <div class="button-container">
+
+                                <button onclick="addToCart('Lexus UX', 2600000000)" class="buy-btn">Mua hàng</button>
+
+                                <a href="#" class="view-details">Chi tiết</a>
+
+                            </div>
+                        </div>
+                    </div>
+                    <button class="slider-arrow next"><i class="fas fa-chevron-right"></i></button>
+                </div>
+            </div>
+
+<!-- HONDA Section -->
+            <div id="honda" class="brand-container">
+                <div class="brand-header">
+                    <div class="brand-title">
+                        <img src="assets/images/logo-honda.png" alt="Honda Logo" class="brand-logo">
+                        <h2>HONDA</h2>
+                    </div>
+                    <a href="#" class="view-more">Xem thêm <i class="fas fa-arrow-right"></i></a>
+                </div>
+                <div class="car-slider">
+                    <div class="car-container">
+                        <div class="car-card" data-origin="Nhật Bản" data-year="2025" data-fuel="Xăng" data-seats="5" data-transmission="CVT" data-engine="1.5L" data-desc="Sedan hạng B tiết kiệm, bền bỉ và dễ lái.">
+                            <img src="assets/images/honda-city.jpg" alt="Honda City">
+                            <h3>Honda City</h3>
+                            <p class="price">568.000.000 VNĐ</p>
+                            <div class="button-container">
+
+                                <button onclick="addToCart('Honda City', 568000000)" class="buy-btn">Mua hàng</button>
+
+                                <a href="#" class="view-details">Chi tiết</a>
+
+                            </div>
+                        </div>
+                        <div class="car-card" data-origin="Nhật Bản" data-year="2025" data-fuel="Xăng" data-seats="5" data-transmission="CVT" data-engine="1.5L Turbo" data-desc="Sedan hạng C thể thao, cảm giác lái phấn khích.">
+                            <img src="assets/images/honda-civic.jpg" alt="Honda Civic">
+                            <h3>Honda Civic</h3>
+                            <p class="price">889.000.000 VNĐ</p>
+                            <div class="button-container">
+
+                                <button onclick="addToCart('Honda Civic',889000000)" class="buy-btn">Mua hàng</button>
+
+                                <a href="#" class="view-details">Chi tiết</a>
+
+                            </div>
+                        </div>
+                        <div class="car-card" data-origin="Nhật Bản" data-year="2025" data-fuel="Xăng" data-seats="7" data-transmission="Tự động (AT)" data-engine="1.5L Turbo" data-desc="SUV 7 chỗ tiện nghi, rộng rãi cho gia đình.">
+                            <img src="assets/images/honda-crv.jpg" alt="Honda CR-V">
+                            <h3>Honda CR-V</h3>
+                            <p class="price">1.259.000.000 VNĐ</p>
+                            <div class="button-container">
+
+                                <button onclick="addToCart('Honda CR-V', 1259000000)" class="buy-btn">Mua hàng</button>
+
+                                <a href="#" class="view-details">Chi tiết</a>
+
+                            </div>
+                        </div>
+                        <div class="car-card" data-origin="Nhật Bản" data-year="2025" data-fuel="Xăng" data-seats="7" data-transmission="CVT" data-engine="1.5L" data-desc="MPV 7 chỗ thực dụng, kinh tế và bền bỉ.">
+                            <img src="assets/images/honda-brv.jpg" alt="Honda BR-V">
+                            <h3>Honda BR-V</h3>
+                            <p class="price">705.000.000 VNĐ</p>
+                            <div class="button-container">
+
+                                <button onclick="addToCart('Honda BR-V', 705000000)" class="buy-btn">Mua hàng</button>
+
+                                <a href="#" class="view-details">Chi tiết</a>
+
+                            </div>
+                        </div>
+                        <div class="car-card" data-origin="Nhật Bản" data-year="2025" data-fuel="Xăng" data-seats="5" data-transmission="CVT" data-engine="1.5L" data-desc="Crossover đô thị linh hoạt, tiết kiệm và hiện đại.">
+                            <img src="assets/images/honda-hrv.jpg" alt="Honda HR-V">
+                            <h3>Honda HR-V</h3>
+                            <p class="price">869.000.000 VNĐ</p>
+                            <div class="button-container">
+
+                                <button onclick="addToCart('Honda HR-V', 869000000)" class="buy-btn">Mua hàng</button>
+
+                                <a href="#" class="view-details">Chi tiết</a>
+
+                            </div>
+                        </div>
+                        <div class="car-card" data-origin="Nhật Bản" data-year="2025" data-fuel="Xăng" data-seats="2" data-transmission="Tự động (AT)" data-engine="3.5L V6 Hybrid" data-desc="Siêu xe hybrid, hiệu suất cao và công nghệ tiên tiến.">
+                            <img src="assets/images/honda-nsx.jpg" alt="Honda NSX">
+                            <h3>Honda NSX</h3>
+                            <p class="price">4.883.000.000 VNĐ</p>
+                            <div class="button-container">
+
+                                <button onclick="addToCart('Honda NSX', 4883000000)" class="buy-btn">Mua hàng</button>
+
+                                <a href="#" class="view-details">Chi tiết</a>
+
+                            </div>
+                        </div>
+                        <div class="car-card" data-origin="Nhật Bản" data-year="2025" data-fuel="Xăng" data-seats="5" data-transmission="CVT" data-engine="1.5L Turbo" data-desc="Sedan hạng D rộng rãi, êm ái và an toàn.">
+                            <img src="assets/images/honda-accord.jpg" alt="Honda Accord">
+                            <h3>Honda Accord</h3>
+                            <p class="price">1.319.000.000 VNĐ</p>
+                            <div class="button-container">
+
+                                <button onclick="addToCart('Honda Accord', 1319000000)" class="buy-btn">Mua hàng</button>
+
+                                <a href="#" class="view-details">Chi tiết</a>
+
+                            </div>
+                        </div>
+                        <div class="car-card" data-origin="Nhật Bản" data-year="2025" data-fuel="Xăng" data-seats="7" data-transmission="Tự động (CVT)" data-engine="3.5L V6" data-desc="MPV cao cấp 7-8 chỗ, rộng rãi và tiện nghi đầy đủ cho gia đình.">
+                            <img src="assets/images/honda-odyssey.jpg" alt="Honda Odyssey">
+                            <h3>Honda Odyssey</h3>
+                            <p class="price">1.376.000.000 VNĐ</p>
+                            <div class="button-container">
+
+                                <button onclick="addToCart('Honda Odyssey', 1376000000)" class="buy-btn">Mua hàng</button>
+
+                                <a href="#" class="view-details">Chi tiết</a>
+
+                            </div>
+                        </div>
+                        <div class="car-card" data-origin="Nhật Bản" data-year="2025" data-fuel="Xăng" data-seats="5" data-transmission="Tự động (CVT)" data-engine="1.5L" data-desc="Hatchback 5 chỗ nhỏ gọn, tiết kiệm nhiên liệu và linh hoạt trong đô thị.">
+                            <img src="assets/images/honda-jazz.jpg" alt="Honda Jazz">
+                            <h3>Honda Jazz</h3>
+                            <p class="price">624.000.000 VNĐ</p>
+                            <div class="button-container">
+
+                                <button onclick="addToCart('Honda Jazz', 624000000)" class="buy-btn">Mua hàng</button>
+
+                                <a href="#" class="view-details">Chi tiết</a>
+
+                            </div>
+                        </div>
+                        <div class="car-card" data-origin="Nhật Bản" data-year="2025" data-fuel="Xăng" data-seats="7" data-transmission="Tự động (AT)" data-engine="3.5L V6" data-desc="SUV cỡ lớn 7 chỗ, tiện nghi và an toàn cao.">
+                            <img src="assets/images/honda-pilot.jpg" alt="Honda Pilot">
+                            <h3>Honda Pilot</h3>
+                            <p class="price">1.012.000.000 VNĐ</p>
+                            <div class="button-container">
+
+                                <button onclick="addToCart('Honda Pilot', 1012000000)" class="buy-btn">Mua hàng</button>
+
+                                <a href="#" class="view-details">Chi tiết</a>
+
+                            </div>
+                        </div>
+                    </div>
+                    <button class="slider-arrow next"><i class="fas fa-chevron-right"></i></button>
+                </div>
+            </div>
+
+<!-- HYUNDAI Section -->
+            <div id="hyundai" class="brand-container">
+                <div class="brand-header">
+                    <div class="brand-title">
+                        <img src="assets/images/logo-hyundai.png" alt="Hyundai Logo" class="brand-logo">
+                        <h2>HYUNDAI</h2>
+                    </div>
+                    <a href="#" class="view-more">Xem thêm <i class="fas fa-arrow-right"></i></a>
+                </div>
+                <div class="car-slider">
+                    <div class="car-container">
+                        <div class="car-card" data-origin="Hàn Quốc" data-year="2025" data-fuel="Xăng" data-seats="5" data-transmission="Tự động (AT)" data-engine="2.0L" data-desc="Sedan hạng C hiện đại, trang bị phong phú.">
+                            <img src="assets/images/hyundai-elantra.jpg" alt="Hyundai Elantra">
+                            <h3>Hyundai Elantra</h3>
+                            <p class="price">769.000.000 VNĐ</p>
+                            <div class="button-container">
+
+                                <button onclick="addToCart('Hyundai Elantra', 769000000)" class="buy-btn">Mua hàng</button>
+
+                                <a href="#" class="view-details">Chi tiết</a>
+
+                            </div>
+                        </div>
+                        <div class="car-card" data-origin="Hàn Quốc" data-year="2025" data-fuel="Xăng" data-seats="5" data-transmission="CVT" data-engine="1.4L" data-desc="Sedan hạng B tiết kiệm và nhiều tiện nghi.">
+                            <img src="assets/images/hyundai-accent.jpg" alt="Hyundai Accent">
+                            <h3>Hyundai Accent</h3>
+                            <p class="price">569.000.000 VNĐ</p>
+                            <div class="button-container">
+
+                                <button onclick="addToCart('Hyundai Accent',569000000)" class="buy-btn">Mua hàng</button>
+
+                                <a href="#" class="view-details">Chi tiết</a>
+
+                            </div>
+                        </div>
+                        <div class="car-card" data-origin="Hàn Quốc" data-year="2025" data-fuel="Xăng" data-seats="5" data-transmission="Tự động (AT)" data-engine="1.5L" data-desc="SUV cỡ B thời trang, phù hợp đô thị.">
+                            <img src="assets/images/hyundai-creta.jpg" alt="Huyndai Creta">
+                            <h3>Huyndai Creta</h3>
+                            <p class="price">715.000.000 VNĐ</p>
+                            <div class="button-container">
+
+                                <button onclick="addToCart('Huyndai Creta', 715000000)" class="buy-btn">Mua hàng</button>
+
+                                <a href="#" class="view-details">Chi tiết</a>
+
+                            </div>
+                        </div>
+                        <div class="car-card" data-origin="Hàn Quốc" data-year="2025" data-fuel="Xăng" data-seats="5" data-transmission="Tự động (AT)" data-engine="2.0L" data-desc="Crossover hạng C rộng rãi, nhiều công nghệ.">
+                            <img src="assets/images/hyundai-tucson.jpg" alt="Hyundai Tucson">
+                            <h3>Hyundai Tucson</h3>
+                            <p class="price">989.000.000 VNĐ</p>
+                            <div class="button-container">
+
+                                <button onclick="addToCart('Hyundai Tucson', 989000000)" class="buy-btn">Mua hàng</button>
+
+                                <a href="#" class="view-details">Chi tiết</a>
+
+                            </div>
+                        </div>
+                        <div class="car-card" data-origin="Hàn Quốc" data-year="2025" data-fuel="Xăng" data-seats="7" data-transmission="Tự động (AT)" data-engine="2.5L" data-desc="SUV 7 chỗ cao cấp, thiết kế mới ấn tượng.">
+                            <img src="assets/images/hyundai-santafe.jpg" alt="Hyundai Santafe">
+                            <h3>Hyundai Santafe</h3>
+                            <p class="price">1.365.000.000 VNĐ</p>
+                            <div class="button-container">
+
+                                <button onclick="addToCart('Hyundai Santafe', 1365000000)" class="buy-btn">Mua hàng</button>
+
+                                <a href="#" class="view-details">Chi tiết</a>
+
+                            </div>
+                        </div>
+                        <div class="car-card" data-origin="Hàn Quốc" data-year="2025" data-fuel="Xăng" data-seats="5" data-transmission="Tự động (AT)" data-engine="1.2L" data-desc="Xe đô thị nhỏ gọn, linh hoạt và tiết kiệm.">
+                            <img src="assets/images/hyundai-grand.jpg" alt="Hyundai Grand">
+                            <h3>Hyundai Grand</h3>
+                            <p class="price">435.000.000 VNĐ</p>
+                            <div class="button-container">
+
+                                <button onclick="addToCart('Hyundai Grand', 435000000)" class="buy-btn">Mua hàng</button>
+
+                                <a href="#" class="view-details">Chi tiết</a>
+
+                            </div>
+                        </div>
+                        <div class="car-card" data-origin="Hàn Quốc" data-year="2025" data-fuel="Xăng" data-seats="7" data-transmission="Tự động (AT)" data-engine="3.8L V6" data-desc="SUV 7 chỗ cỡ lớn, sang trọng và mạnh mẽ.">
+                            <img src="assets/images/hyundai-palisade.jpg" alt="Hyundai Palisade">
+                            <h3>Hyundai Palisade</h3>
+                            <p class="price">1.589.000.000 VNĐ</p>
+                            <div class="button-container">
+
+                                <button onclick="addToCart('Hyundai Palisade', 1589000000)" class="buy-btn">Mua hàng</button>
+
+                                <a href="#" class="view-details">Chi tiết</a>
+
+                            </div>
+                        </div>
+                        <div class="car-card" data-origin="Hàn Quốc" data-year="2025" data-fuel="Xăng" data-seats="7" data-transmission="CVT" data-engine="1.5L" data-desc="MPV 7 chỗ gia đình, tiện nghi và giá hợp lý.">
+                            <img src="assets/images/hyundai-stargazer.jpg" alt="Hyundai Stargazer">
+                            <h3>Hyundai Stargazer</h3>
+                            <p class="price">685.000.000 VNĐ</p>
+                            <div class="button-container">
+
+                                <button onclick="addToCart('Hyundai Stargazer', 685000000)" class="buy-btn">Mua hàng</button>
+
+                                <a href="#" class="view-details">Chi tiết</a>
+
+                            </div>
+                        </div>
+                        <div class="car-card" data-origin="Hàn Quốc" data-year="2025" data-fuel="Xăng" data-seats="5" data-transmission="Tự động (AT)" data-engine="2.0L" data-desc="Sedan hạng D trẻ trung, nhiều công nghệ tiện ích.">
+                            <img src="assets/images/hyundai-sonata.jpg" alt="Hyundai Sonata">
+                            <h3>Hyundai Sonata</h3>
+                            <p class="price">705.000.000 VNĐ</p>
+                            <div class="button-container">
+
+                                <button onclick="addToCart('Hyundai Sonata', 705000000)" class="buy-btn">Mua hàng</button>
+
+                                <a href="#" class="view-details">Chi tiết</a>
+
+                            </div>
+                        </div>
+                        <div class="car-card" data-origin="Hàn Quốc" data-year="2025" data-fuel="Xăng" data-seats="7" data-transmission="Tự động (AT)" data-engine="1.5L Turbo" data-desc="MPV 7 chỗ cao cấp, rộng rãi và thoải mái.">
+                            <img src="assets/images/hyundai-custin.jpg" alt="Hyundai Custin">
+                            <h3>Hyundai Custin</h3>
+                            <p class="price">890.000.000 VNĐ</p>
+                            <div class="button-container">
+
+                                <button onclick="addToCart('Hyundai Custin', 890000000)" class="buy-btn">Mua hàng</button>
+
+                                <a href="#" class="view-details">Chi tiết</a>
+
+                            </div>
+                        </div>
+                    </div>
+                    <button class="slider-arrow next"><i class="fas fa-chevron-right"></i></button>
+                </div>
+            </div>
+
+<!-- KIA Section -->
+            <div id="kia" class="brand-container">
+                <div class="brand-header">
+                    <div class="brand-title">
+                        <img src="assets/images/logo-kia.png" alt="KIA Logo" class="brand-logo">
+                        <h2>KIA</h2>
+                    </div>
+                    <a href="#" class="view-more">Xem thêm <i class="fas fa-arrow-right"></i></a>
+                </div>
+                <div class="car-slider">
+                    <div class="car-container">
+                        <div class="car-card" data-origin="Hàn Quốc" data-year="2025" data-fuel="Xăng" data-seats="5" data-transmission="AT" data-engine="1.2L" data-desc="Hatchback đô thị nhỏ gọn, tiết kiệm và linh hoạt.">
+                            <img src="assets/images/kia-morning.jpg" alt="KIA Morning">
+                            <h3>KIA Morning</h3>
+                            <p class="price">424.000.000 VNĐ</p>
+                            <div class="button-container">
+
+                                <button onclick="addToCart('Kia Morning', 424000000)" class="buy-btn">Mua hàng</button>
+
+                                <a href="#" class="view-details">Chi tiết</a>
+
+                            </div>
+                        </div>
+                        <div class="car-card" data-origin="Hàn Quốc" data-year="2025" data-fuel="Xăng" data-seats="5" data-transmission="MT/AT" data-engine="1.4L" data-desc="Sedan hạng B giá tốt, thực dụng và tiết kiệm.">
+                            <img src="assets/images/kia-soluto.jpg" alt="KIA Soluto">
+                            <h3>KIA Soluto</h3>
+                            <p class="price">482.000.000 VNĐ</p>
+                            <div class="button-container">
+
+                                <button onclick="addToCart('KIA Soluto',482000000)" class="buy-btn">Mua hàng</button>
+
+                                <a href="#" class="view-details">Chi tiết</a>
+
+                            </div>
+                        </div>
+                        <div class="car-card" data-origin="Hàn Quốc" data-year="2025" data-fuel="Xăng" data-seats="5" data-transmission="AT" data-engine="1.5L" data-desc="SUV cỡ B trẻ trung, trang bị phong phú.">
+                            <img src="assets/images/kia-sonet.jpg" alt="KIA Sonet">
+                            <h3>KIA Sonet</h3>
+                            <p class="price">624.000.000 VNĐ</p>
+                            <div class="button-container">
+
+                                <button onclick="addToCart('KIA Sonet', 624000000)" class="buy-btn">Mua hàng</button>
+
+                                <a href="#" class="view-details">Chi tiết</a>
+
+                            </div>
+                        </div>
+                        <div class="car-card" data-origin="Hàn Quốc" data-year="2025" data-fuel="Xăng" data-seats="7" data-transmission="AT" data-engine="2.2L Diesel" data-desc="MPV 7 chỗ cỡ lớn, êm ái và tiện nghi.">
+                            <img src="assets/images/kia-carnival.jpg" alt="KIA Carnival">
+                            <h3>KIA Carnival</h3>
+                            <p class="price">1.589.000.000 VNĐ</p>
+                            <div class="button-container">
+
+                                <button onclick="addToCart('KIA Carnival', 1589000000)" class="buy-btn">Mua hàng</button>
+
+                                <a href="#" class="view-details">Chi tiết</a>
+
+                            </div>
+                        </div>
+                        <div class="car-card" data-origin="Hàn Quốc" data-year="2025" data-fuel="Xăng/Dầu" data-seats="7" data-transmission="AT" data-engine="2.2L Diesel/2.5L" data-desc="SUV 7 chỗ cao cấp, thiết kế hiện đại và tiện nghi.">
+                            <img src="assets/images/kia-sorento.jpg" alt="KIA Sorento">
+                            <h3>KIA Sorento</h3>
+                            <p class="price">1.184.000.000 VNĐ</p>
+                            <div class="button-container">
+
+                                <button onclick="addToCart('KIA Sorento', 1184000000)" class="buy-btn">Mua hàng</button>
+
+                                <a href="#" class="view-details">Chi tiết</a>
+
+                            </div>
+                        </div>
+                        <div class="car-card" data-origin="Hàn Quốc" data-year="2025" data-fuel="Xăng" data-seats="5" data-transmission="AT" data-engine="1.6L Turbo" data-desc="SUV hạng C thể thao, nhiều công nghệ.">
+                            <img src="assets/images/kia-sportage.jpg" alt="KIA Sportage">
+                            <h3>KIA Sportage</h3>
+                            <p class="price">879.000.000 VNĐ</p>
+                            <div class="button-container">
+
+                                <button onclick="addToCart('KIA Sportage', 879000000)" class="buy-btn">Mua hàng</button>
+
+                                <a href="#" class="view-details">Chi tiết</a>
+
+                            </div>
+                        </div>
+                        <div class="car-card" data-origin="Hàn Quốc" data-year="2025" data-fuel="Xăng" data-seats="7" data-transmission="AT" data-engine="1.5L/1.4L Turbo" data-desc="MPV 5+2 linh hoạt, phù hợp gia đình trẻ.">
+                            <img src="assets/images/kia-carens.jpg" alt="KIA Carens">
+                            <h3>KIA Carens</h3>
+                            <p class="price">769.000.000 VNĐ</p>
+                            <div class="button-container">
+
+                                <button onclick="addToCart('KIA Carens', 769000000)" class="buy-btn">Mua hàng</button>
+
+                                <a href="#" class="view-details">Chi tiết</a>
+
+                            </div>
+                        </div>
+                        <div class="car-card" data-origin="Hàn Quốc" data-year="2025" data-fuel="Xăng" data-seats="5" data-transmission="AT" data-engine="1.6L/2.0L" data-desc="Sedan hạng C rộng rãi, vận hành mượt mà.">
+                            <img src="assets/images/kia-cerato.jpg" alt="KIA Cerato">
+                            <h3>KIA Cerato</h3>
+                            <p class="price">685.000.000 VNĐ</p>
+                            <div class="button-container">
+
+                                <button onclick="addToCart('KIA Cerato', 685000000)" class="buy-btn">Mua hàng</button>
+
+                                <a href="#" class="view-details">Chi tiết</a>
+
+                            </div>
+                        </div>
+                        <div class="car-card" data-origin="Hàn Quốc" data-year="2025" data-fuel="Xăng" data-seats="5" data-transmission="AT" data-engine="1.6L" data-desc="Sedan hạng C thiết kế trẻ trung, tiết kiệm.">
+                            <img src="assets/images/kia-k3.jpg" alt="KIA K3">
+                            <h3>KIA K3</h3>
+                            <p class="price">819.000.000 VNĐ</p>
+                            <div class="button-container">
+
+                                <button onclick="addToCart('KIA K3', 819000000)" class="buy-btn">Mua hàng</button>
+
+                                <a href="#" class="view-details">Chi tiết</a>
+
+                            </div>
+                        </div>
+                        <div class="car-card" data-origin="Hàn Quốc" data-year="2025" data-fuel="Xăng" data-seats="5" data-transmission="AT" data-engine="2.0L" data-desc="Sedan hạng D cao cấp, nhiều công nghệ an toàn.">
+                            <img src="assets/images/kia-k5.jpg" alt="KIA K5">
+                            <h3>KIA K5</h3>
+                            <p class="price">1.069.000.000 VNĐ</p>
+                            <div class="button-container">
+
+                                <button onclick="addToCart('KIA K5', 1069000000)" class="buy-btn">Mua hàng</button>
+
+                                <a href="#" class="view-details">Chi tiết</a>
+
+                            </div>
+                        </div>
+                    </div>
+                    <button class="slider-arrow next"><i class="fas fa-chevron-right"></i></button>
+                </div>
+            </div>
+
+<!-- VINFAST Section -->
+            <div id="vinfast" class="brand-container">
+                <div class="brand-header">
+                    <div class="brand-title">
+                        <img src="assets/images/logo-vinfast.png" alt="Vinfast Logo" class="brand-logo">
+                        <h2>VINFAST</h2>
+                    </div>
+                    <a href="#" class="view-more">Xem thêm <i class="fas fa-arrow-right"></i></a>
+                </div>
+                <div class="car-slider">
+                    <div class="car-container">
+                        <div class="car-card" data-origin="Việt Nam" data-year="2025" data-fuel="Điện" data-seats="5" data-transmission="Một cấp (EV)" data-engine="Môtơ điện" data-desc="SUV tiện nghi với hiệu suất cao, nội thất thoải mái và công nghệ an toàn hiện đại.">
+                            <img src="assets/images/vinfast-vfe34.jpg" alt="Vinfast VF e34">
+                            <h3>Vinfast VF e34</h3>
+                            <p class="price">710.000.000 VNĐ</p>
+                            <div class="button-container">
+
+                                <button onclick="addToCart('Vinfast VF e34', 710000000)" class="buy-btn">Mua hàng</button>
+
+                                <a href="#" class="view-details">Chi tiết</a>
+
+                            </div>
+                        </div>
+                        <div class="car-card" data-origin="Việt Nam" data-year="2025" data-fuel="Điện" data-seats="4" data-transmission="Một cấp (EV)" data-engine="Môtơ điện" data-desc="Xe đô thị cỡ nhỏ, linh hoạt, tiết kiệm chi phí vận hành.">
+                            <img src="assets/images/vinfast-vf3.jpg" alt="Vinfast VF3">
+                            <h3>Vinfast VF3</h3>
+                            <p class="price">315.000.000 VNĐ</p>
+                            <div class="button-container">
+
+                                <button onclick="addToCart('Vinfast VF3', 315000000)" class="buy-btn">Mua hàng</button>
+
+                                <a href="#" class="view-details">Chi tiết</a>
+
+                            </div>
+                        </div>
+                        <div class="car-card" data-origin="Việt Nam" data-year="2025" data-fuel="Điện" data-seats="5" data-transmission="Một cấp (EV)" data-engine="Môtơ điện" data-desc="Crossover đô thị hiện đại, phù hợp di chuyển hằng ngày.">
+                            <img src="assets/images/vinfast-vf5.jpg" alt="Vinfast VF5">
+                            <h3>Vinfast VF5</h3>
+                            <p class="price">529.000.000 VNĐ</p>
+                            <div class="button-container">
+
+                                <button onclick="addToCart('Vinfast VF5',529000000)" class="buy-btn">Mua hàng</button>
+
+                                <a href="#" class="view-details">Chi tiết</a>
+
+                            </div>
+                        </div>
+                        <div class="car-card" data-origin="Việt Nam" data-year="2025" data-fuel="Điện" data-seats="5" data-transmission="Một cấp (EV)" data-engine="Môtơ điện" data-desc="SUV cỡ nhỏ với hiệu suất cao và công nghệ hỗ trợ lái.">
+                            <img src="assets/images/vinfast-vf6.jpg" alt="Vinfast VF6">
+                            <h3>Vinfast VF6</h3>
+                            <p class="price">689.000.000 VNĐ</p>
+                            <div class="button-container">
+
+                                <button onclick="addToCart('Vinfast VF6', 689000000)" class="buy-btn">Mua hàng</button>
+
+                                <a href="#" class="view-details">Chi tiết</a>
+
+                            </div>
+                        </div>
+                        <div class="car-card" data-origin="Việt Nam" data-year="2025" data-fuel="Điện" data-seats="5" data-transmission="Một cấp (EV)" data-engine="Môtơ điện" data-desc="SUV hạng C thiết kế cá tính, nhiều tiện nghi.">
+                            <img src="assets/images/vinfast-vf7.jpg" alt="Vinfast VF7">
+                            <h3>Vinfast VF7</h3>
+                            <p class="price">949.000.000 VNĐ</p>
+                            <div class="button-container">
+
+                                <button onclick="addToCart('Vinfast VF7', 949000000)" class="buy-btn">Mua hàng</button>
+
+                                <a href="#" class="view-details">Chi tiết</a>
+
+                            </div>
+                        </div>
+                        <div class="car-card" data-origin="Việt Nam" data-year="2025" data-fuel="Điện" data-seats="5" data-transmission="Một cấp (EV)" data-engine="Môtơ điện" data-desc="SUV 5 chỗ vận hành êm ái, nội thất rộng rãi.">
+                            <img src="assets/images/vinfast-vf8.jpg" alt="Vinfast VF8">
+                            <h3>Vinfast VF8</h3>
+                            <p class="price">1.215.000.000 VNĐ</p>
+                            <div class="button-container">
+
+                                <button onclick="addToCart('Vinfast VF8', 1215000000)" class="buy-btn">Mua hàng</button>
+
+                                <a href="#" class="view-details">Chi tiết</a>
+
+                            </div>
+                        </div>
+                        <div class="car-card" data-origin="Việt Nam" data-year="2025" data-fuel="Điện" data-seats="7" data-transmission="Một cấp (EV)" data-engine="Môtơ điện" data-desc="SUV 7 chỗ cao cấp, phù hợp gia đình, nhiều công nghệ an toàn.">
+                            <img src="assets/images/vinfast-vf9.jpg" alt="Vinfast VF9">
+                            <h3>Vinfast VF9</h3>
+                            <p class="price">1.680.000.000 VNĐ</p>
+                            <div class="button-container">
+
+                                <button onclick="addToCart('Vinfast VF9', 1680000000)" class="buy-btn">Mua hàng</button>
+
+                                <a href="#" class="view-details">Chi tiết</a>
+
+                            </div>
+                        </div>
+                        <div class="car-card" data-origin="Việt Nam" data-year="2025" data-fuel="Xăng" data-seats="5" data-transmission="Tự động (AT)" data-engine="2.0L Turbo" data-desc="Sedan tiện nghi với khả năng vận hành mạnh mẽ và ổn định.">
+                            <img src="assets/images/vinfast-luxa.jpg" alt="Vinfast Lux A">
+                            <h3>Vinfast Lux A</h3>
+                            <p class="price">781.000.000 VNĐ</p>
+                            <div class="button-container">
+
+                                <button onclick="addToCart('Vinfast Lux A', 781000000)" class="buy-btn">Mua hàng</button>
+
+                                <a href="#" class="view-details">Chi tiết</a>
+
+                            </div>
+                        </div>
+                        <div class="car-card" data-origin="Việt Nam" data-year="2025" data-fuel="Xăng" data-seats="5" data-transmission="Tự động (AT)" data-engine="V8 6.2L" data-desc="SUV hiệu suất cao, sang trọng và đẳng cấp.">
+                            <img src="assets/images/vinfast-president.jpg" alt="Vinfast President">
+                            <h3>Vinfast President</h3>
+                            <p class="price">4.600.000.000 VNĐ</p>
+                            <div class="button-container">
+
+                                <button onclick="addToCart('Vinfast President', 4600000000)" class="buy-btn">Mua hàng</button>
+
+                                <a href="#" class="view-details">Chi tiết</a>
+
+                            </div>
+                        </div>
+                        <div class="car-card" data-origin="Việt Nam" data-year="2025" data-fuel="Xăng" data-seats="5" data-transmission="Tự động (CVT)" data-engine="1.4L" data-desc="Hatchback đô thị gọn gàng, linh hoạt và tiết kiệm.">
+                            <img src="assets/images/vinfast-fadil.jpg" alt="Vinfast Fadil">
+                            <h3>Vinfast Fadil</h3>
+                            <p class="price">425.000.000 VNĐ</p>
+                            <div class="button-container">
+
+                                <button onclick="addToCart('Vinfast Fadil', 425000000)" class="buy-btn">Mua hàng</button>
+
+                                <a href="#" class="view-details">Chi tiết</a>
+
+                            </div>
+                        </div>
+                    </div>
+                    <button class="slider-arrow next"><i class="fas fa-chevron-right"></i></button>
+                </div>
+            </div>
+
+        </section>
+    </main>
+
+    <footer id="contact">
+        <div class="footer-content">
+            <div class="footer-section" id="about">
+                <h3>Về 3 Boys Auto</h3>
+                <p>Chuyên cung cấp các dòng xe hơi cao cấp với chất lượng và dịch vụ tốt nhất.</p>
+            </div>
+            <div class="footer-section">
+                <h3>Liên hệ</h3>
+                <p>Email: tdinh2753@gmail.com</p>
+                <p>Điện thoại: 0799429767</p>
+                <p>Địa chỉ: 163/8, đường Thành Thái, quận 10, TP.HCM</p>
+            </div>
+            <div class="footer-section">
+                <h3>Theo dõi chúng tôi</h3>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-facebook"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-youtube"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 3 Boys Auto. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Modal chi tiết xe -->
+<div id="carModal" class="modal">
+  <div class="modal-content">
+    <span class="close-btn">&times;</span>
+    <img id="modalImg" src="" alt="Xe ô tô">
+    <h2 id="modalTitle"></h2>
+    <p id="modalPrice"></p>
+    <p id="modalDesc"></p>
+    <button id="addToCartBtn" class="btn">Thêm vào giỏ</button>
+  </div>
+</div>
+
+    <!-- SVG filter for blob effect -->
+    <svg xmlns="http://www.w3.org/2000/svg" version="1.1" style="position: absolute; width: 0; height: 0;">
+        <defs>
+            <filter id="goo">
+                <feGaussianBlur in="SourceGraphic" result="blur" stdDeviation="10" />
+                <feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 18 -7" result="goo" />
+                <feBlend in2="goo" in="SourceGraphic" result="mix" />
+            </filter>
+        </defs>
+    </svg>
+
+    <script src="assets/js/main.js"></script>
+    <script>
+        // Kiểm tra trạng thái đăng nhập và hiển thị thông tin user/admin
+        function checkUserLoginStatus() {
+            const isUserLoggedIn = localStorage.getItem('userLoggedIn') === 'true';
+            const isAdminLoggedIn = localStorage.getItem('adminLoggedIn') === 'true';
+            
+            const userInfo = JSON.parse(localStorage.getItem('userInfo') || '{}');
+            const adminInfo = JSON.parse(localStorage.getItem('adminInfo') || '{}');
+            const adminUsername = localStorage.getItem('adminUsername') || 'Admin';
+            
+            const loginBtn = document.getElementById('loginBtn');
+            const userInfoDiv = document.getElementById('userInfo');
+            
+            // Nếu admin đã đăng nhập
+            if (isAdminLoggedIn) {
+                // Ẩn nút đăng nhập, hiển thị thông tin admin
+                loginBtn.style.display = 'none';
+                userInfoDiv.style.display = 'flex';
+                
+                // Cập nhật thông tin admin
+                const displayName = adminInfo.name || adminUsername;
+                document.getElementById('userName').textContent = displayName;
+                document.getElementById('userAvatar').src = adminInfo.picture || `https://ui-avatars.com/api/?name=${displayName}&background=dc3545&color=fff&size=35`;
+                
+            } else if (isUserLoggedIn && userInfo.name) {
+                // Ẩn nút đăng nhập, hiển thị thông tin user
+                loginBtn.style.display = 'none';
+                userInfoDiv.style.display = 'flex';
+                
+                // Cập nhật thông tin user
+                document.getElementById('userName').textContent = userInfo.name;
+                document.getElementById('userAvatar').src = userInfo.picture || `https://ui-avatars.com/api/?name=${userInfo.name}&background=007bff&color=fff&size=35`;
+                
+            } else {
+                // Hiển thị nút đăng nhập, ẩn thông tin user
+                loginBtn.style.display = 'inline-block';
+                userInfoDiv.style.display = 'none';
+            }
+        }
+        
+        // Function đăng xuất
+        function logout() {
+            const isAdmin = localStorage.getItem('adminLoggedIn') === 'true';
+            
+            if (isAdmin) {
+                // Đăng xuất admin
+                localStorage.removeItem('adminLoggedIn');
+                localStorage.removeItem('adminUsername');
+                localStorage.removeItem('adminInfo');
+                alert('Admin đã đăng xuất thành công!');
+            } else {
+                // Đăng xuất user thường
+                localStorage.removeItem('userLoggedIn');
+                localStorage.removeItem('userEmail');
+                localStorage.removeItem('userInfo');
+                // Xóa giỏ hàng khi đăng xuất
+                localStorage.removeItem('cart');
+                // Cập nhật badge giỏ hàng về 0
+                const cartBadge = document.querySelector('.cart-count');
+                if (cartBadge) cartBadge.textContent = '0';
+                alert('Đã đăng xuất thành công!');
+            }
+            
+            checkUserLoginStatus();
+        }
+        
+        // Gọi function kiểm tra khi trang load
+        document.addEventListener('DOMContentLoaded', function() {
+            checkUserLoginStatus();
+        });
+    </script>
+
+
+</body>
+</html>

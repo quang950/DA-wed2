@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thông tin cá nhân khách hàng</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="guest-container" style="max-width:420px;margin:40px auto;background:#fff;padding:32px 24px;border-radius:12px;box-shadow:0 2px 12px rgba(0,0,0,0.08);">
+        <h2 style="text-align:center;margin-bottom:24px"><i class="fas fa-user"></i> Thông tin cá nhân</h2>
+        <form id="guestInfoForm">
+            <div class="form-group" style="text-align:center">
+                <img id="guestAvatarPreview" src="" alt="Avatar" style="width:70px;height:70px;border-radius:50%;object-fit:cover;margin-bottom:8px;border:1px solid #eee;">
+                                <div style="display:flex;justify-content:center;">
+                                    <span id="changeAvatarBtn" style="display:inline-block;margin-top:8px;padding:6px 18px;border-radius:8px;background:#f5f5f5;border:1px solid #bbb;color:#333;font-weight:500;cursor:pointer;">Đổi avatar</span>
+                                </div>
+                <input type="file" id="guestAvatar" name="avatar" accept="image/*" style="display:none">
+            </div>
+            <div class="form-group">
+                <label for="guestFirstName">Họ</label>
+                <input type="text" id="guestFirstName" name="firstName" required>
+            </div>
+            <div class="form-group">
+                <label for="guestLastName">Tên</label>
+                <input type="text" id="guestLastName" name="lastName" required>
+            </div>
+            <div class="form-group">
+                <label for="guestEmail">Email</label>
+                <input type="email" id="guestEmail" name="email" required disabled>
+            </div>
+            <div class="form-group">
+                <label for="guestPhone">Điện thoại</label>
+                <input type="text" id="guestPhone" name="phone">
+            </div>
+            <div class="form-group">
+                <label for="guestBirthDate">Ngày sinh</label>
+                <input type="date" id="guestBirthDate" name="birthDate">
+            </div>
+            <div class="form-group">
+                <label for="guestProvince">Tỉnh/TP</label>
+                <input type="text" id="guestProvince" name="province">
+            </div>
+            <div class="modal-actions" style="display:flex;gap:1rem;justify-content:flex-end;padding-top:1rem;border-top:1px solid #e9ecef;">
+                <a href="index.html" style="display:inline-block;padding:0.9rem 2.2rem;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);color:#fff;font-weight:600;border-radius:8px;text-decoration:none;box-shadow:0 2px 8px rgba(102,126,234,0.08);transition:background 0.2s;">&larr; Về trang chủ</a>
+                <button type="submit" class="save-btn" style="font-size:1.15rem;padding:0.9rem 2.2rem;background:linear-gradient(135deg,#28a745 0%,#20c997 100%);color:#fff;border:none;border-radius:8px;font-weight:600;box-shadow:0 2px 8px rgba(40,167,69,0.08);transition:background 0.2s;">Lưu</button>
+            </div>
+        </form>
+    </div>
+    <script>
+    // Khi bấm vào chữ 'Đổi avatar' thì mở file input
+    document.getElementById('changeAvatarBtn').addEventListener('click', function() {
+        document.getElementById('guestAvatar').click();
+    });
+    // Load thông tin user
+    document.addEventListener('DOMContentLoaded', function() {
+        const email = localStorage.getItem('userEmail');
+        let users = JSON.parse(localStorage.getItem('users')) || [];
+        const user = users.find(u => u.email === email);
+        if (!user) {
+            alert('Không tìm thấy thông tin cá nhân!');
+            return;
+        }
+        document.getElementById('guestFirstName').value = user.firstName || '';
+        document.getElementById('guestLastName').value = user.lastName || '';
+        document.getElementById('guestEmail').value = user.email || '';
+        document.getElementById('guestPhone').value = user.phone || '';
+        document.getElementById('guestBirthDate').value = user.birthDate || '';
+        document.getElementById('guestProvince').value = user.province || '';
+        document.getElementById('guestAvatarPreview').src = user.avatar || '';
+    });
+    // Xử lý chọn file avatar và preview
+    document.getElementById('guestAvatar').addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = function(ev) {
+            document.getElementById('guestAvatarPreview').src = ev.target.result;
+        };
+        reader.readAsDataURL(file);
+    });
+    // Lưu thông tin
+    document.getElementById('guestInfoForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const email = localStorage.getItem('userEmail');
+        let users = JSON.parse(localStorage.getItem('users')) || [];
+        const idx = users.findIndex(u => u.email === email);
+        if (idx === -1) {
+            alert('Không tìm thấy thông tin cá nhân!');
+            return;
+        }
+        users[idx].firstName = document.getElementById('guestFirstName').value.trim();
+        users[idx].lastName = document.getElementById('guestLastName').value.trim();
+        users[idx].phone = document.getElementById('guestPhone').value.trim();
+        users[idx].birthDate = document.getElementById('guestBirthDate').value;
+        users[idx].province = document.getElementById('guestProvince').value.trim();
+        // Nếu có file avatar mới
+        const avatarInput = document.getElementById('guestAvatar');
+        if (avatarInput && avatarInput.files && avatarInput.files[0]) {
+            const reader = new FileReader();
+            reader.onload = function(ev) {
+                users[idx].avatar = ev.target.result;
+                localStorage.setItem('users', JSON.stringify(users));
+                alert('Đã cập nhật thông tin cá nhân!');
+            };
+            reader.readAsDataURL(avatarInput.files[0]);
+        } else {
+            localStorage.setItem('users', JSON.stringify(users));
+            alert('Đã cập nhật thông tin cá nhân!');
+        }
+    });
+    </script>
+</body>
+</html>
